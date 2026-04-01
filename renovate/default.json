@@ -1,0 +1,59 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "description": "Ma cnfiguration",
+  "fetchChangeLogs": "pr",
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "recreateWhen": "always",
+  "rebaseWhen": "behind-base-branch",
+  "rangeStrategy": "in-range-only",
+  "separateMajorMinor": false,
+  "composerIgnorePlatformReqs": ["ext-*", "lib-*", "php"],
+  "packageRules": [
+    {
+      "description": "PHP Dockerfile",
+      "groupName": "MAJ PHP Dockerfile",
+      "matchPackageNames": ["php", "docker.io/library/php", "php-fpm"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "matchManagers": ["composer", "npm"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "description": "Grouper les de mises à jour non majeures",
+      "groupName": "Mises à jour non majeures",
+      "excludePackageNames": ["php", "docker.io/library/php", "php-fpm"],
+      "postUpdateOptions": ["composerWithAll", "npmDedupe"]
+    },
+    {
+      "description": "MAJ Majeures",
+      "groupName": "Mises à jour majeures",
+      "excludePackageNames": ["php", "docker.io/library/php", "php-fpm"],
+      "dependencyDashboardApproval": true,
+      "rangeStrategy": "bump" 
+    },
+    {
+      "description": "Labels pour le Backend JS",
+      "matchManagers": ["npm"],
+      "matchFileNames": ["package.json"],
+      "labels": ["javascript"]
+    },
+    {
+      "description": "Labels pour le Backend PHP",
+      "matchManagers": ["composer"],
+      "matchFileNames": ["composer.json"],
+      "labels": ["php"]
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["\\.gitlab-ci\\.ya?ml$"],
+      "matchStrings": [
+        "remote:\\s+https://gitlab/mon-groupe/renovate-bot/-/raw/(?<currentValue>v[0-9.]+)/"
+      ],
+      "datasourceTemplate": "gitlab-releases",
+      "depNameTemplate": "mon-groupe/renovate-bot"
+    }
+  ]
+}

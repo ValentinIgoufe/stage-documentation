@@ -1,0 +1,20 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ],
+        "excludes": [
+            "Kernel.php",
+            "DataFixtures",
+            "Migrations"
+        ]
+    },
+    "logs": {
+        "text": "var/reports/infection.log",
+        "html": "var/reports/infection.html"
+    },
+    "mutators": {
+        "@default": true
+    }
+}

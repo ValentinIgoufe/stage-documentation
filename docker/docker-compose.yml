@@ -1,0 +1,96 @@
+services:
+    php:
+        image: symfony-fmd:latest
+        restart: on-failure
+        depends_on:
+            - mariadb
+            - mailsender
+        environment:
+            - APP_DEBUG=0
+            - MAIL_FROM=${MAIL_FROM}
+            - MAIL_SUBJECT_PREFIX=${MAIL_SUBJECT_PREFIX}
+            - MAIL_MONOLOG_TO=${MAIL_MONOLOG_TO}
+            - MAIL_APPLICATION_ALERT=${MAIL_APPLICATION_ALERT}
+            - LDAP_URI=${LDAP_URI}
+            - LDAP_SUFFIXE=${LDAP_SUFFIXE}
+            - LDAP_SEARCH_DN=${LDAP_SEARCH_DN}
+            - LDAP_USER=${LDAP_USER}
+            - LDAP_PASSWORD=${LDAP_PASSWORD}
+            - USER_AUTO_REGISTER=${USER_AUTO_REGISTER}
+            - APP_SEO=${APP_SEO}
+            - APPLI_NAME=${APPLI_NAME}
+            - APP_MESSAGE_TITLE=${APP_MESSAGE_TITLE}
+            - APP_MESSAGE_CONTENT=${APP_MESSAGE_CONTENT}
+            - CODE_EDITOR=${CODE_EDITOR}
+            - APP_BASE_URL=${APP_BASE_URL}
+            - APP_CRYPT_KEY=${APP_CRYPT_KEY}
+            - APP_ENV=${APP_ENV}
+            - APP_SECRET=${APP_SECRET}
+            - DATABASE_URL=${DATABASE_URL}
+            - WKHTMLTOPDF_PATH=${WKHTMLTOPDF_PATH}
+            - WKHTMLTOIMAGE_PATH=${WKHTMLTOIMAGE_PATH}
+            - LOCK_DSN=${LOCK_DSN}
+            - MAILER_DSN=${MAILER_DSN}
+        healthcheck:
+            test: ["CMD", "nc", "-z", "localhost", "9000"]
+            interval: 5s
+            timeout: 3s
+            retries: 3
+            start_period: 5s
+        cap_drop:
+            - ALL
+        cap_add:
+            - CHOWN
+            - SETGID
+            - SETUID
+        security_opt:
+            - no-new-privileges:true
+
+    nginx:
+        image: nginx-fmd:latest
+        restart: on-failure
+        environment:
+            TZ: Europe/Paris
+        ports:
+            - "99:8080"
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080"]
+            interval: 5s
+            timeout: 5s
+            retries: 3
+        cap_drop:
+            - ALL
+        cap_add:
+            - CHOWN
+            - SETGID
+            - SETUID
+        security_opt:
+            - no-new-privileges:true
+        depends_on:
+            - php
+
+    #serveur de base de donnees
+    mariadb:
+        image: 'mariadb:10.6'
+        restart: on-failure
+        environment:
+            MYSQL_USER: user
+            MYSQL_PASSWORD: o9uK6ZzPcs2DbkDv9A
+            MYSQL_DATABASE: application
+            MYSQL_ROOT_PASSWORD: 7Tw6MsCyZ3iyPsqis6e
+            TZ: Europe/Paris
+        volumes:
+            - ./docker/mariadb/:/var/lib/mysql/
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p7Tw6MsCyZ3iyPsqis6e"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+            start_period: 10s
+
+    mailsender:
+        image: maildev/maildev
+        restart: on-failure
+        environment:
+            MAILDEV_SMTP_PORT: 25
+            TZ: Europe/Paris

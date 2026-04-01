@@ -1,0 +1,30 @@
+deptrac:
+  paths:
+    - ./src
+  layers:
+    - name: Controller
+      collectors:
+        - type: directory
+          value: src/Controller/.*
+    - name: Service
+      collectors:
+        - type: directory
+          value: src/Services/.*
+    - name: Entity
+      collectors:
+        - type: directory
+          value: src/Entity/.*
+    - name: Repository
+      collectors:
+        - type: directory
+          value: src/Repository/.*
+  ruleset:
+    Controller:
+      - Service
+      - Entity
+    Service:
+      - Entity
+      - Repository
+    Repository:
+      - Entity
+    Entity: []

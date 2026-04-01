@@ -1,0 +1,27 @@
+<script>alert(1)</script>
+../../../../etc/passwd
+                         
+' OR 1=1 --
+%00
+%0a
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+NaN
+undefined
+{{7*7}}
+0000-00-00
+2024-02-30
+9999-99-99
+1970-01-01T00:00:00Z
+-1
+true
+false
+[]
+{"$gt":""}
+2024-01-01 25:00:00
+.
+/
+\
+\n
+++
+٢٠٢٤-٠٥-٠١ 
+2024-05-01\0
