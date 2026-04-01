@@ -41,7 +41,7 @@ Permet aussi de générer la provenance de notre build (pour SLSA).
 
 > **Tests unitaires - PHPUnit** : Tests unitaires
 
-> **"Smoke Test"** : Permet de tester les droits du user (changer l'heure, whoami, docker inspect, etc...)
+> **"Smoke Test"** : Permet de tester les droits du user (changer l'heure, whoami, docker inspect, etc...) car ceux-ci sont restreints à partir du docker compose.
 
 > **DAST - OWASP ZAP** : Analyse dynamique de l'application, elle curl les URLs de l'app pour trouver des failles de sécurité au niveau de nginx (***ex*** : Anti-clickjacking, X-Content-Type-Options, Server Version, CSP, Anti-CSRF, et bien d'autres... Celles-ci ont été trouvées sur CAB_DRH_FMD). Voir fichier de configuration [zap.yaml](./zap.yaml).
 
