@@ -43,6 +43,8 @@ Les fichiers suivants sont inclus dans ce repository mais ne sont peut-être plu
 
 > **separateMajorMinor** : Si ***true*** entre en conflit avec les groupNames des Packages rules et on peut pas séparer les MAJs PHP (Dockerfile) et les librairies PHP (Symfony,etc). Donc ici on met en **false** et on gère tout.
 
+> **allowedVersions** : Permet de resteindre les versions acceptées pour un package rule, utile pour la version de PHP dans le Dockerfile.
+
 ##### Informations : 
 
 > Si on déplace Renovate d'un dépôt à un autre ou d'un groupe à un autre, il faut modifier l'URL du dépôt actuel dans default.json -> customManagers, config.js -> onboardingConfig et package.json -> repository -> url.

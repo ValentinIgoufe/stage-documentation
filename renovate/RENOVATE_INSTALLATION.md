@@ -6,7 +6,7 @@
 
 ### 1/ Créer un repository vide pour Renovate
 
-> Dans le même groupe ou non, on peut choisir dans quels groupes Renovate a le droit de regarder grâce à `autodiscoverFilter` dans [config.js](./config.js).
+> Dans le même groupe ou non sur GitLab (on peut choisir dans quels groupes Renovate a le droit de regarder grâce à `autodiscoverFilter` dans [config.js](./config.js)).
 (Doc : https://docs.renovatebot.com/self-hosted-configuration/#autodiscoverfilter).
 
 > Puis clone/push dans ce dépôt le contenu de ce repository : 
@@ -49,7 +49,7 @@
 
 > **Cas PAS OK 2 :** Le pipeline de la MR a échoué. Des messages d'erreur composer de Renovate apparaissent dans les commentaires de la MR.
 
-> **Résolution des cas PAS OK :** Il faut restreindre le `composer.json`. Les seules erreurs que j'ai rencontrées étaient des conflits de version. En effet, une version mineure peut demander une version majeure d'un autre package, mais on **sépare** les majeures et les mineures. **Exemple concret :** Doctrine passe de 2.11 à 2.18 (c'est une mineure), mais celle-ci a besoin de Symfony 6.4 alors que nous sommes en 5.4 → mise à jour impossible ! Pour résoudre cela, il faut ajouter `< x.x.x` **manuellement** dans le `composer.json` pour les packages en question (PHP et/ou JS), afin de restreindre à la dernière version compatible (Il faut regarder sur internet). Ce type de restriction peut aussi être utilisé pour les versions majeures afin d'éviter de sauter trop de versions pour les projets les plus anciens. Évidemment, si une version majeure nécessite un package que nous avons restreint, il faut le dérembourrer pour harmoniser l'ensemble.
+> **Résolution des cas PAS OK :** Il faut restreindre le `composer.json`. Les seules erreurs que j'ai rencontrées étaient des conflits de version. En effet, une version mineure peut demander une version majeure d'un autre package, mais on **sépare** les majeures et les mineures. **Exemple concret :** Doctrine passe de 2.11 à 2.18 (c'est une mineure), mais celle-ci a besoin de Symfony 6.4 alors que nous sommes en 5.4 → mise à jour impossible ! Pour résoudre cela, il faut ajouter `< x.x.x` **manuellement** dans le `composer.json` pour les packages en question (PHP et/ou JS), afin de restreindre à la dernière version compatible (Il faut regarder sur internet). Ce type de restriction peut aussi être utilisé pour les versions majeures afin d'éviter de sauter trop de versions pour les projets les plus anciens. Évidemment, si une version majeure nécessite un package que nous avons restreint, il faut le dérembourrer pour harmoniser l'ensemble. Pour restreindre les versions de PHP (Dockerfile), il faut passer directement par le renovate.json/default.json à travers "allowedVersions": "< 8.5.0".
 
 ### Trucs et astuces 
 
