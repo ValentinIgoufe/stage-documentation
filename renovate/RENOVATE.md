@@ -7,13 +7,9 @@
 
 > Renovate permet de mettre à jour des dépendances automatiquement en fonction de paramètres que l'on peut lui indiquer.
 
-### Comment ça fonctionne ?
+### Installation
 
-> - [x] Avoir un repository pour Renovate et y activer un pipeline schedule.
-
-> - [x] Avoir le renovate.json dans chaque projet. Il permet de dire à Renovate quels paramètres on applique.
-
-> - [x] Avoir un Token Personal Access Token avec les droits : api, read_repository, write_repository
+> * [Installation de Renovate](RENOVATE_INSTALLATION.md)
 
 ### La configuration de Renovate : 
 

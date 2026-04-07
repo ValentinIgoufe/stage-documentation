@@ -45,7 +45,9 @@ Permet aussi de générer la provenance de notre build (pour SLSA).
 
 > **DAST - OWASP ZAP** : Analyse dynamique de l'application, elle curl les URLs de l'app pour trouver des failles de sécurité au niveau de nginx (***ex*** : Anti-clickjacking, X-Content-Type-Options, Server Version, CSP, Anti-CSRF, et bien d'autres... Celles-ci ont été trouvées sur CAB_DRH_FMD). Voir fichier de configuration [zap.yaml](./zap.yaml).
 
-> **Fuzzing - FFUF** : Permet de bombarder une URL (GET,POST,PUT,PATCH,DELETE) (ici le /login) avec des valeurs aberrantes (***voir [fuzz.txt](./fuzz.txt)***). Avec la console web, on peut facilement voir les variables qui sont envoyées en POST et vers quelle URL, ainsi on peut bombarder le controller pour voir comment il réagit. Sur ***CAB_DRH_FDM***, on remarque qu'**aucune** vérification est effectuée sur la data reçue du frontend ! Un simple body **VIDE** (via Postman) déclenche une erreur 500 ! 
+> **Fuzzing - FFUF** : Permet de bombarder une URL (GET,POST,PUT,PATCH,DELETE) (ici le /login) avec des valeurs aberrantes (***voir [fuzz.txt](./fuzz.txt)***). Avec la console web, on peut facilement voir les variables qui sont envoyées en POST et vers quelle URL, ainsi on peut bombarder le controller pour voir comment il réagit. Sur ***CAB_DRH_FMD***, on remarque qu'**aucune** vérification est effectuée sur la data reçue du frontend ! Un simple body **VIDE** (via Postman) déclenche une erreur 500 ! 
+
+> **Tests de charge - Grafana k6** : Simuler n utilisateurs en parallèles sur l'application.
 
 > **InfectionPHP** : Tests de mutations, vérification de la qualité des tests. Job manuel et/ou planifié car long (~40 min) et gourmand. D'après mon professeur, c'est **30%** de bugs détectés avant la mise en prod ! Voir fichier de configuration [infection.json.dist](./infection.json.dist).
 (Doc : https://infection.github.io/)
