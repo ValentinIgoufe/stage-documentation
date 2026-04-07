@@ -39,7 +39,7 @@
 
 > Le `renovate.json` permet de spécifier les paramètres à appliquer pour le projet en question. Le `renovate.json` d'un projet `extends` (hérite de tous les paramètres) le `default.json` du dépôt de Renovate, qui lui-même `extends` une configuration préconfigurée par Renovate (Doc : https://docs.renovatebot.com/presets-config/). La config du `default.json` est "safe" : elle se base uniquement sur la plage du `composer.json` pour éviter de créer des conflits. Il est tout à fait possible de retirer `extends` et d'avoir une configuration différente pour les projets.
 
-### 6/ Lancer le pipeline schedule (ou attendre qu'il se lancer tout seul)
+### 6/ Lancer le pipeline schedule (ou attendre qu'il se lance tout seul)
 
 > Renovate se lance, applique les changements et une ou plusieurs MR sont créées (les mises à jour majeures de PHP du Dockerfile et celles des packages sont séparées pour éviter les conflits de versions).
 
