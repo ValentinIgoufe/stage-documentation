@@ -5,7 +5,10 @@ module.exports = {
   binarySource: 'install',
   token: process.env.RENOVATE_TOKEN,
   autodiscover: true,
-  autodiscoverFilter: 'mon-groupe/*',
+  autodiscoverFilter: [
+    'mon-groupe/*', 
+    'mon-groupe2/*'
+  ],
   npmrc: "legacy-peer-deps=true",
   onboarding: false, 
   onboardingConfig: {

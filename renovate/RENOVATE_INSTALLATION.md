@@ -14,7 +14,7 @@
 (Doc: https://docs.renovatebot.com/examples/self-hosting/) 
 
 > Les URLs à modifier (:bangbang: Il faut mettre l'URL du repo de Renovate sur le GitLab :bangbang:) :
-> - [x] dans default.json -> customManagers : matchStrings, ***uniquement gitlab/mon-groupe/renovate-bot***, **ET** pour depNameTemplate ne mettre que groupe/renovate-bot, 
+> - [x] dans default.json -> customManagers : matchStrings, remplacer ***uniquement gitlab/mon-groupe/renovate-bot***, **ET** pour depNameTemplate remplacer groupe/renovate-bot, 
 > - [x] config.js -> onboardingConfig, uniquement mon-groupe/renovate-bot, ***laisser le :default***, **ET** changer ***autodiscoverFilter*** pour correspondre aux groupes qui vont être scannés par Renovate. C'est une liste, on peut donc mettre plusieurs groupes ['mon-groupe/ *', 'mon-groupe2/ *'], après chaque / il y a un **ESPACE** car en .md ça fait un rendu bizarre, il faut **ENLEVER** l'**ESPACE**.
 > - [x] package.json -> repository -> url.
 
@@ -61,6 +61,8 @@
 ### Trucs et astuces 
 
 > **Il n'y a pas de MR pour les versions majeures** : C'est normal, Renovate a créé un Dependency Dashboard au sein des Work Items (menu à gauche) du dépôt du projet en question. Il faut cocher la case "fix(deps): update mises à jour majeures" dans la section "Pending Approval".
+
+> **chore(deps): lock file maintenance** : Il est possible de retrouver ceci dans le Dependency Dashboard. En effet, les MAJs de Renovate se base sur le composer.json, cependant les sous-dépendances ne sont pas inscriptes dans celui-ci mais le composer.lock. Ainsi, si l'on coche ce lock file maintenance, Renovate mettra à jour les sous-dépendances.
 
 ### Désactivation de Renovate 
 
