@@ -2,5 +2,19 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>mon-groupe/renovate-bot:default"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["php"],
+      "allowedVersions": "< 8.4.0"
+    },
+    {
+      "matchPackageNames": ["symfony/framework-bundle", "symfony/asset"],
+      "allowedVersions": "< 7.0.0"
+    },
+    {
+      "matchPackagePatterns": ["^doctrine/"],
+      "allowedVersions": "< 3.0.0"
+    }
   ]
 }
