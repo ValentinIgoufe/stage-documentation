@@ -14,7 +14,7 @@
 ### La configuration de Renovate : 
 
 > :bangbang: 
-Les fichiers suivants sont inclus dans ce repository mais ne sont peut-être plus à jour.
+Les fichiers suivants sont inclus dans repo_renovate mais ne sont peut-être plus à jour.
 :bangbang:
 
 #### Le config.js
@@ -23,7 +23,7 @@ Les fichiers suivants sont inclus dans ce repository mais ne sont peut-être plu
 
 #### Le default.json
 
-> C'est la configuration globale de Renovate c'est-à-dire de comment il va mettre à jour les dépendances. 
+> C'est la configuration globale par défaut de Renovate c'est-à-dire de comment il va mettre à jour les dépendances. 
 
 ##### Les paramètres importants : 
 
