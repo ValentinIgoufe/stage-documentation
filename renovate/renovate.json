@@ -5,16 +5,102 @@
   ],
   "packageRules": [
     {
-      "matchPackageNames": ["php"],
-      "allowedVersions": "< 8.4.0"
+      "matchManagers": [
+        "composer", 
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "minor", 
+        "patch", 
+        "pin", 
+        "digest"
+      ],
+      "description": "Grouper les de mises à jour non majeures",
+      "groupName": "Mises à jour non majeures",
+      "matchPackageNames": [
+        "!php",
+        "!docker.io/library/php",
+        "!php-fpm"
+      ],
+      "postUpdateOptions": [
+        "composerWithAll", 
+        "npmDedupe"
+      ]
     },
     {
-      "matchPackageNames": ["symfony/framework-bundle", "symfony/asset"],
+      "matchManagers": [
+        "composer", 
+        "npm", 
+        "dockerfile"
+      ],
+      "description": "MAJ Majeures avec PHP Dockerfile",
+      "groupName": "Mises à jour majeures",
+      "dependencyDashboardApproval": true,
+      "fetchChangeLogs": "off",
+      "rangeStrategy": "bump",
+      "postUpdateOptions": [
+        "composerWithAll", 
+        "npmDedupe"
+      ]
+    },
+    {
+      "description": "Passer à PHP 8.5.x",
+      "matchPackageNames": [
+        "php",
+        "docker.io/library/php",
+        "php-fpm"
+      ],
+      "allowedVersions": "^8.5.0"
+    },
+    {
+      "description": "Passer à Symfony 6.4.x",
+      "matchPackageNames": [
+        "symfony/framework-bundle", 
+        "symfony/asset",
+        "symfony/console",
+        "symfony/dotenv",
+        "symfony/expression-language",
+        "symfony/form",
+        "symfony/intl",
+        "symfony/mailer",
+        "symfony/mime",
+        "symfony/process",
+        "symfony/rate-limiter",
+        "symfony/runtime",
+        "symfony/security-bundle",
+        "symfony/serializer",
+        "symfony/string",
+        "symfony/translation",
+        "symfony/twig-bundle",
+        "symfony/validator",
+        "symfony/web-link",
+        "symfony/yaml",
+        "symfony/browser-kit",
+        "symfony/css-selector",
+        "symfony/debug-bundle",
+        "symfony/phpunit-bridge",
+        "symfony/proxy-manager-bridge",
+        "symfony/stopwatch",
+        "symfony/web-profiler-bundle"
+      ],
       "allowedVersions": "< 7.0.0"
     },
     {
-      "matchPackagePatterns": ["^doctrine/"],
-      "allowedVersions": "< 3.0.0"
+      "description": "Labels pour le Backend JS",
+      "matchManagers": ["npm"],
+      "matchFileNames": ["package.json"],
+      "labels": ["javascript"]
+    },
+    {
+      "description": "Labels pour le Backend PHP",
+      "matchManagers": ["composer"],
+      "matchFileNames": ["composer.json"],
+      "labels": ["php"]
+    },
+    {
+      "description": "Labels pour les Dockerfiles",
+      "matchFileNames": ["Dockerfile"],
+      "labels": ["docker"]
     }
   ]
 }

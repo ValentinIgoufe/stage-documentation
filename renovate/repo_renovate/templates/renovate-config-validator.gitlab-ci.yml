@@ -1,0 +1,12 @@
+variables:
+  RENOVATE_ENDPOINT: $CI_API_V4_URL
+  RENOVATE_PLATFORM: gitlab
+  CI_RENOVATE_IMAGE: ghcr.io/renovatebot/renovate:43
+
+renovate-config-validator:
+  stage: test
+  image:
+    name: ${CI_RENOVATE_IMAGE}
+    pull_policy: always
+  script:
+    - renovate-config-validator $RENOVATE_CONFIG_VALIDATOR_EXTRA_FLAGS

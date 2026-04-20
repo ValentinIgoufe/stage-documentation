@@ -1,0 +1,32 @@
+{
+  "name": "renovate-bot",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "http://gitlab/mon-groupe/renovate-bot"
+  },
+  "devDependencies": {
+    "@semantic-release/gitlab": "13.3.2",
+    "@semantic-release/commit-analyzer": "13.0.1",
+    "@semantic-release/release-notes-generator": "14.1.0",
+    "conventional-changelog-conventionalcommits": "9.3.0",
+    "prettier": "3.8.1",
+    "semantic-release": "25.0.3"
+  },
+  "scripts": {
+    "prettier": "prettier --check --ignore-unknown \"**/*.*\"",
+    "prettier-fix": "prettier --write --ignore-unknown \"**/*.*\""
+  },
+  "release": {
+    "branches": ["main", "master"],
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "preset": "conventionalcommits"
+    }],
+    ["@semantic-release/release-notes-generator", {
+      "preset": "conventionalcommits"
+    }],
+    "@semantic-release/gitlab"
+  ]
+  }
+}

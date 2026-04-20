@@ -1,0 +1,92 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>renovatebot/.github",
+    "gitlab>renovate-bot/renovate-runner"
+  ],
+  "ignorePresets": ["github>renovatebot/.github:weekly-docs-references"],
+  "platformAutomerge": true,
+  "prCreation": "immediate",
+  "packageRules": [
+    {
+      "description": "Trigger breaking release for major updates",
+      "matchPackageNames": [
+        "renovate/renovate",
+        "ghcr.io/renovatebot/renovate"
+      ],
+      "matchUpdateTypes": ["major"],
+      "commitMessagePrefix": "feat(deps)!:",
+      "automergeType": "pr"
+    },
+    {
+      "description": "Trigger feature release for minor updates",
+      "matchPackageNames": [
+        "renovate/renovate",
+        "ghcr.io/renovatebot/renovate"
+      ],
+      "matchFileNames": ["!README.md"],
+      "matchUpdateTypes": ["minor"],
+      "semanticCommitType": "feat",
+      "automergeType": "pr"
+    },
+    {
+      "description": "Trigger fix release for patch updates",
+      "matchPackageNames": [
+        "renovate/renovate",
+        "ghcr.io/renovatebot/renovate"
+      ],
+      "matchFileNames": ["!README.md"],
+      "matchUpdateTypes": ["patch", "digest"],
+      "semanticCommitType": "fix",
+      "automergeType": "pr"
+    },
+    {
+      "description": "Schedule digest updates weekly",
+      "matchUpdateTypes": ["digest"],
+      "extends": ["schedule:weekly"]
+    },
+    {
+      "description": "Use node versioning and chore for node images",
+      "matchPackageNames": ["ghcr.io/containerbase/node"],
+      "semanticCommitType": "chore",
+      "versioning": "node"
+    },
+    {
+      "description": "Update references in readme",
+      "matchFileNames": ["README.md"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "additionalBranchPrefix": "docs-",
+      "automerge": true,
+      "dependencyDashboardApproval": false,
+      "semanticCommitType": "docs",
+      "groupName": "dependencies",
+      "extends": ["schedule:weekly"]
+    },
+    {
+      "description": "Don't pin renovate images in templates",
+      "matchFileNames": ["templates/**"],
+      "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
+      "pinDigests": false
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update renovate-runner references",
+      "managerFilePatterns": ["README.md"],
+      "matchStrings": [
+        "\\s+- remote: https://gitlab\\.com/renovate-bot/renovate-runner/-/raw/(?<currentValue>v[0-9.]+)/",
+        "\\s+ref: (?<currentValue>v[0-9.]+)\\s+",
+        "\\s`(?<currentValue>v[0-9.]+)`\\s"
+      ],
+      "datasourceTemplate": "gitlab-releases",
+      "depNameTemplate": "renovate-runner",
+      "packageNameTemplate": "renovate-bot/renovate-runner",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "gitlabci": {
+    "managerFilePatterns": [".gitlab-ci.yml"],
+    "pinDigests": true
+  }
+}

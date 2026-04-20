@@ -1,0 +1,83 @@
+include:
+  - local: '/templates/renovate.gitlab-ci.yml'
+  - local: '/templates/renovate-config-validator.gitlab-ci.yml'
+
+variables:
+  RENOVATE_GIT_AUTHOR: Renovate Bot <bot@renovateapp.com>
+  RENOVATE_CONFIG_VALIDATOR_EXTRA_FLAGS: default.json .gitlab/renovate.json
+  RENOVATE_X_SQLITE_PACKAGE_CACHE: "false"
+  RENOVATE_LOG_LEVEL: debug
+
+stages:
+  - test
+  - deploy
+  - release
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_COMMIT_BRANCH !~ /^renovate\//
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^renovate\//
+      when: never
+    - if: $CI_COMMIT_TAG
+      when: never
+    # Note: On laisse le schedule passer pour le job 'renovate' réel (non-dry-run)
+    - when: always
+
+# --- Configuration Renovate ---
+
+.renovate:
+  image: renovate/renovate:43.108.0@sha256:e72a36e63eed9116b143bb65acb15153f88887cb087ee9ce0a5cc9020c4e32e2
+  variables:
+    RENOVATE_BASE_DIR: $CI_PROJECT_DIR/renovate
+    RENOVATE_ENDPOINT: $CI_API_V4_URL
+    RENOVATE_PLATFORM: gitlab
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-renovate
+    paths:
+      - renovate/cache
+  script:
+    - renovate $RENOVATE_EXTRA_FLAGS
+
+renovate:
+  extends: .renovate
+  stage: deploy
+  cache: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
+    - when: never
+
+renovate:dry-run:
+  extends: .renovate
+  stage: test
+  variables:
+    RENOVATE_DRY_RUN: "full"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: always
+
+# --- Job de Release (Semantic Release) ---
+
+release:
+  image: node:24.14.0-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114
+  stage: release
+  variables:
+    GIT_AUTHOR_EMAIL: bot@renovateapp.com
+    GIT_COMMITTER_EMAIL: bot@renovateapp.com
+    GITLAB_TOKEN: $RENOVATE_TOKEN
+    GIT_DEPTH: '0'
+    GITLAB_URL: $CI_SERVER_URL
+    REPOSITORY_URL: $CI_PROJECT_URL
+  before_script:
+    - apk add --no-cache git
+    - npm install
+  script:
+    - AUTH_URL="${CI_SERVER_PROTOCOL}://renovate-bot:${RENOVATE_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+    - npx semantic-release --repository-url $AUTH_URL
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
