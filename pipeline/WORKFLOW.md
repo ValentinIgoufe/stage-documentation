@@ -33,7 +33,7 @@
 
 > **BuildKit** : Build des images Nginx et PHP, utilisation du cache des layers Docker dans le Registry GitLab au lieu de stocker une 'vraie' image. Les tags des images pointent vers les layers du cache, système de pointeurs, comme en langage ***C***. Gain de place car on a pas 2 fois la même chose. 
 :bangbang: Il est nécessaire de configurer le Registry pour supprimer les layers qui ne sont pointées par aucun tag.
-Permet aussi de générer la provenance de notre build (pour SLSA).
+Permet aussi de générer la provenance de notre build (pour SLSA). :bangbang:
 (Doc : https://docs.docker.com/reference/cli/docker/buildx/build/)
 (Doc : https://blog.stephane-robert.info/docs/conteneurs/images-conteneurs/build/buildkit/)
 

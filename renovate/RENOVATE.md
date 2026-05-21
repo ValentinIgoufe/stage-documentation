@@ -25,26 +25,45 @@ Les fichiers suivants sont inclus dans repo_renovate mais ne sont peut-être plu
 
 > C'est la configuration globale par défaut de Renovate c'est-à-dire de comment il va mettre à jour les dépendances. 
 
-##### Les paramètres importants : 
+#### Explications de chaque key dans le default.json
 
-> **rangeStrategy** : Permet de définir la portée des MAJ que Renovate va installer. Dans cette configuration, on utilise **in-range-only** ce qui permet de ne mettre à jour que dans la portée du composer.json, pour éviter des problèmes de compatiblités etc. On utilise aussi **bump** pour le PHP, ce qui lui permet de ne pas respecter le composer.json et de **sauter** à la dernière version disponible (Peut évidemment casser le code si les libs ne suivent pas...). 
-:bangbang: Je recommande de limiter la montée de version que ce soit de PHP ou des librairies (***exemple*** : "php": "^8.1 <8.5") car il y a de **grandes** chances que le build échoue ou que le composer/npm update échoue car des versions ne seront plus compatibles entre elles (***exemple*** : Symfony 5.4 et Doctrine 2.18).
+> **extends** : Héritage d'une config (***exemple*** : renovate.json hérite de default.json). Pourquoi **["config:best-practices"]** ? -> https://docs.renovatebot.com/presets-config/.
 
-> **Packages rules** : Permet de définir des règles spécifiques pour certains paquets. Ici, on sépare les MAJ majeures et mineures. Seules les MAJ mineures seront proposées à travers une Merge Request de Renovate, les majeures quant à elles seront dans le Dependancy Dashboard (***"dependencyDashboardApproval": true***). Une case à cocher permettra à Renovate de créer la MR avec les MAJ majeures. L'option **postUpdateOptions** permet à Renovate d'exécuter une commande après avoir fait la mise à jour, le but est donc ici de synchroniser les lock et les json pour éviter tout problème de compatibilités. 
-:bangbang: **RangeStrategy** et **matchUpdateTypes** sont incompatibles dans un même **Package rules**. Un package rule qui a matchUpdateTypes doit donc hériter de la configuration globale (c'est-à-dire rangeStrategy en dehors du bloc Packages rules). Il est cependant possible de définir une RangeStrategy pour chaque packge rule qui n'a pas de matchUpdateTypes (***exemple*** : PHP du Dockerfile ainsi que les MAJ majeures des dépendances PHP et NPM ). Les MAJ de PHP et des dépendances sont séparées pour éviter des problèmes de compatiblités de versions et autres.
+> **fetchChangeLogs** : Avoir les détails de chaque nouvelle version dans la MR. Pourquoi **off** -> plus il y a de projets plus il y a de MAJs plus il y a de logs = le temps d'exécution de Renovate devient **exponentiel**.
 
-> **matchUpdateTypes** : Permet de choisir quelles updates on souhaite dans un **Package rule** (***exemple*** : major, minor, patch, etc...).
+> **pr...** : Permet de définir une limite de MRs, ici 0 donc illimité.
 
-##### Les paramètres moins importants : 
+> **recreateWhen** : Permet de définir si Renovate recréer une nouvelle MR si celle-ci a été fermée par un humain.
 
-> **groupName (Packages Rules)** : Permet de grouper au sein d'une même Merge Request. 
+> **rebaseWhen** : Permet de définir quand Renovate rebase la MR.
+
+> **rangeStrategy** : Permet de définir la portée des MAJ que Renovate va installer. Dans cette configuration, on utilise **bump**, ce qui permet de mettre la version exacte, du package qui est installé, dans le composer.json (pas de ^5.0.0).
+
+> **separateMajorMinor** : Séparer les MAJs majeures et mineures.
 
 > **composerIgnorePlatformReqs** : Permet d'exclure des librairies lors d'un composer update.
 
-> **separateMajorMinor** : Si ***true*** entre en conflit avec les groupNames des Packages rules et on peut pas séparer les MAJs PHP (Dockerfile) et les librairies PHP (Symfony,etc). Donc ici on met en **false** et on gère tout.
+> **docker-compose + fileMatch** : Override le nom du fichier docker-compose (***exemple*** : docker-compose.yaml.ci).
 
-> **allowedVersions** : Permet de resteindre les versions acceptées pour un package rule, utile pour la version de PHP dans le Dockerfile.
+> ##### packageRules et les sous-clés
+> Permet de définir des règles spécifiques pour certains paquets. Ici, on sépare les MAJ majeures, mineures et celles de l'environnement PHP. 
+> **groupName** : Permet de grouper au sein d'une même Merge Request. 
+> **semantic... + commit...** : Titre de la MR.
+> **matchPackageNames** : Packages autorisés dans cette MR.
+> **excludePackageNames** : Packages non autorisés dans cette MR. Pourquoi "containerbase/php-prebuild" -> c'est le package qui définie php dans le composer.json.
+> **matchManagers** : Managers de packages autorisés. Pourquoi "custom.regex" -> c'est pour le customManager qui permet de trouver la variable PHP_IMAGE dans le nouveau gitlab-ci.
+> **matchUpdateTypes** : Permet de choisir quelles updates on souhaite dans cette MR.
+> **excludePackagePatterns** : Exclure des packages qui matchent le pattern, le customManager renvoie le depName de ce qu'il a trouvé, ici php. On l'exclue dans cette key car ça ne fonctionnait pas dans excludePackageNames.
+> **dependencyDashboardApproval** : Mettre la MR en attente dans le dependencyDashboardApproval (Work items).
+> **postUpdateOptions** : Dire quoi faire après la modification des composer/package.json -> mettre à jour les locks.
+> ##### Labels
+> Afficher un petit label pour visualiser sur quels fichiers ont été fait les changements de Renovate.
+> ##### Resteindre la montée en version
+> **allowedVersions (packagesRules)** : Permet de resteindre les versions acceptées pour un package rule, utile si le composer update échoue dans une MR (**symptômes** : message de Renovate BOT comme quoi le composer update a failed dans la MR ou dans le build, et dans `changes` dans la MR le composer.lock n'est pas là).
+
+> ##### customManagers 
+> Regex pour trouver la variable PHP_IMAGE dans le gitlab-ci.
 
 ##### Informations : 
 
-> Si on déplace Renovate d'un dépôt à un autre ou d'un groupe à un autre, il faut modifier l'URL du dépôt actuel dans default.json -> customManagers, config.js -> onboardingConfig et package.json -> repository -> url.
+> Si on déplace Renovate d'un dépôt à un autre ou d'un groupe à un autre, il faut modifier l'URL du dépôt actuel dans config.js -> onboardingConfig et package.json -> repository -> url.

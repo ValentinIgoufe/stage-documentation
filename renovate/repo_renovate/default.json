@@ -2,66 +2,103 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:best-practices"],
   "description": "Ma cnfiguration",
-  "fetchChangeLogs": "pr",
+  "fetchChangeLogs": "off",
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
   "recreateWhen": "always",
   "rebaseWhen": "behind-base-branch",
-  "rangeStrategy": "in-range-only",
-  "separateMajorMinor": false,
+  "rangeStrategy": "bump",
+  "separateMajorMinor": true,
   "composerIgnorePlatformReqs": ["ext-*", "lib-*", "php"],
+  "docker-compose": {
+    "fileMatch": [
+      "(^|/)docker-compose[^/]*\\.ya?ml$",
+      "(^|/)docker-compose\\.ya?ml\\.[^/]+$"
+    ]
+  },
   "packageRules": [
     {
-      "description": "PHP Dockerfile",
-      "groupName": "MAJ PHP Dockerfile",
-      "matchPackageNames": ["php", "docker.io/library/php", "php-fpm"],
-      "matchDatasources": ["docker"],
-      "rangeStrategy": "bump",
-      "allowedVersions": "< 8.5.0"
+      "description": "Maj environnement PHP : Dockerfile, composer.json et gitlab-ci",
+      "groupName": "MAJ env PHP",
+      "groupSlug": "maj-env-php",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "maj-env-php",
+      "commitMessageAction": "Mise à jour env PHP :",
+      "matchPackageNames": ["php", "docker.io/library/php", "php-fpm", "containerbase/php-prebuild"],
+      "matchManagers": ["composer", "dockerfile", "gitlabci", "custom.regex"],
+      "postUpdateOptions": ["composerWithAll"]
     },
     {
-      "matchManagers": ["composer", "npm"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "description": "Grouper les de mises à jour non majeures",
-      "groupName": "Mises à jour non majeures",
-      "excludePackageNames": ["php", "docker.io/library/php", "php-fpm"],
+      "enabled": true,
+      "description": "MAJs Majeures",
+      "groupName": "MAJ majeures",
+      "groupSlug": "maj-majeures",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "maj-majeures",
+      "commitMessageAction": "Mise à jour majeures :",
+      "matchManagers": ["composer", "npm", "gitlabci", "dockerfile", "docker-compose"],
+      "matchUpdateTypes": ["major"],
+      "excludePackageNames": ["php", "docker.io/library/php", "library/php", "php-fpm", "containerbase/php-prebuild"],
+      "excludePackagePatterns": [
+        "^php:",
+        "^php-",
+        "^docker\\.io/library/php:",
+        "^containerbase/php-prebuild:"
+      ],
+      "dependencyDashboardApproval": false,
       "postUpdateOptions": ["composerWithAll", "npmDedupe"]
     },
     {
-      "description": "MAJ Majeures",
-      "groupName": "Mises à jour majeures",
-      "excludePackageNames": ["php", "docker.io/library/php", "php-fpm"],
-      "dependencyDashboardApproval": true,
-      "fetchChangeLogs": "off",
-      "rangeStrategy": "bump" 
+      "description": "MAJs mineures, patches et pinning global",
+      "groupName": "MAJ mineures",
+      "groupSlug": "maj-mineures",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "maj-mineures",
+      "commitMessageAction": "Mise à jour mineures :",
+      "matchManagers": ["composer", "npm", "gitlabci", "dockerfile", "docker-compose"],
+      "matchUpdateTypes": ["minor", "patch", "bump", "pin", "digest", "pinDigest"],
+      "excludePackageNames": ["php", "docker.io/library/php", "php-fpm", "containerbase/php-prebuild"],
+      "excludePackagePatterns": [
+        "^php:",
+        "^php-",
+        "^docker\\.io/library/php:",
+        "^containerbase/php-prebuild:"
+      ],
+      "postUpdateOptions": ["composerWithAll", "npmDedupe"],
+      "automerge": true
     },
     {
-      "description": "Labels pour le Backend JS",
+      "description": "Labels par technologie",
       "matchManagers": ["npm"],
-      "matchFileNames": ["package.json"],
-      "labels": ["javascript"]
+      "labels": ["npm"]
     },
     {
-      "description": "Labels pour le Backend PHP",
       "matchManagers": ["composer"],
-      "matchFileNames": ["composer.json"],
-      "labels": ["php"]
+      "labels": ["composer"]
     },
     {
-      "description": "Labels pour les Dockerfiles",
-      "matchFileNames": ["Dockerfile"],
-      "labels": ["docker"]
+      "matchManagers": ["dockerfile"],
+      "labels": ["dockerfile"]
+    },
+    {
+      "matchManagers": ["docker-compose"],
+      "labels": ["docker-compose"]
+    },
+    {
+      "matchManagers": ["gitlabci", "custom.regex"],
+      "labels": ["gitlabci"]
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["\\.gitlab-ci\\.ya?ml$"],
+      "description": "Détecter et mettre à jour la variable globale PHP_IMAGE dans la CI",
+      "managerFilePatterns": ["/(^|/)\\.gitlab-ci\\.ya?ml$/"],
       "matchStrings": [
-        "remote:\\s+https://gitlab/mon-groupe/renovate-bot/-/raw/(?<currentValue>v[0-9.]+)/"
+        "PHP_IMAGE:\\s*[\"']?(?<depName>php):(?<currentValue>[^\"'\\s]+)[\"']?"
       ],
-      "datasourceTemplate": "gitlab-releases",
-      "depNameTemplate": "mon-groupe/renovate-bot"
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     }
   ]
 }
