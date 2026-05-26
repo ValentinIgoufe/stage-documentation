@@ -1,0 +1,773 @@
+stages:
+  - plumber
+  - lint
+  - analysis
+  - refactor
+  - build           
+  - test          
+  - scan    
+  - push                          
+  - sign  
+  - deploy
+
+variables:
+  IMAGE_TAG_BUILDER: $CI_REGISTRY_IMAGE/builder:latest
+  IMAGE_TAG_SYMFONY_TEMP: $CI_REGISTRY_IMAGE/symfony:temp-$CI_COMMIT_SHORT_SHA
+  IMAGE_TAG_SYMFONY_LATEST: $CI_REGISTRY_IMAGE/symfony:latest
+  IMAGE_TAG_NGINX_TEST_LATEST: $CI_REGISTRY_IMAGE/nginx/test:latest
+  IMAGE_TAG_NGINX_PROD_LATEST: $CI_REGISTRY_IMAGE/nginx/prod:latest
+  IMAGE_TAG_NGINX_FINAL: $IMAGE_TAG_NGINX_TEST_LATEST
+  IMAGE_TAG_NGINX_TEMP: $CI_REGISTRY_IMAGE/nginx:temp-$CI_COMMIT_SHORT_SHA
+  NGINX_CONF: "default-test.conf"
+  REGISTRY_URL: gitlab:5005
+  COMPOSER_CACHE_DIR: .composer-cache
+  PHP_IMAGE: php:8.4-fpm
+  APP_ENV: dev
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: always
+      variables:
+        NGINX_CONF: "default-prod.conf"
+        IMAGE_TAG_NGINX_FINAL: $IMAGE_TAG_NGINX_PROD_LATEST
+        APP_ENV: prod
+    - if: $CI_COMMIT_BRANCH == "test"
+      variables:
+        APP_ENV: test
+      when: always
+    - if: $CI_COMMIT_BRANCH == "dev"
+      when: always
+
+include:
+  - component: $CI_SERVER_FQDN/mon-groupe/plumber/plumber@v0.3.3
+    inputs:
+      # Compliance
+      threshold: 100
+      # Job Behavior
+      stage: plumber
+      gitlab_token: $GITLAB_TOKEN
+      # Output
+      output_file: plumber-report.json           # Export JSON report
+      pbom_file: plumber-pbom.json               # PBOM artifact
+      pbom_cyclonedx_file: plumber-cyclonedx-sbom.json  # CycloneDX SBOM (auto-uploaded as a GitLab report)
+      print_output: true
+
+# Cache Composer
+cache:
+  key:
+    files:
+      - composer.lock
+  paths:
+    - .composer-cache/
+    - vendor/
+
+# docker hub login
+.docker_hub_login_pattern:
+  before_script: &docker_hub_login
+    - echo "$DOCKER_HUB_PASS" | docker login -u valouche190705 --password-stdin
+
+# docker dind pattern
+.docker_dind_pattern:
+  image: docker:latest
+  services:
+    - name: docker:dind
+      command: ["--insecure-registry=gitlab:5005"]
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_OPTS: "--insecure-registry=gitlab:5005"
+    
+# Dockerfile lint
+hadolint:
+  stage: lint
+  image: hadolint/hadolint:v2.14.0-alpine
+  script:
+    - hadolint --ignore=DL3008 --failure-threshold=warning docker/php/Dockerfile
+
+.php_job:
+  image: $PHP_IMAGE
+  before_script: &init_composer
+    - |
+      curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+      if [ ! -f "vendor/autoload.php" ]; then
+        echo "Cache vide, installation des dépendances..."
+        apt-get update && apt-get install -y git unzip
+        composer install --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
+      else
+        echo "Dossier vendor récupéré du cache, on passe l'installation."
+        composer dump-autoload --optimize
+      fi
+    - mkdir -p var/reports
+
+# Composer Unused (analyse des dépendances non utilisées)
+composer_unused:
+  extends: .php_job
+  stage: lint
+  script:
+    - |
+      if ! command -v curl &> /dev/null; then
+        apt-get update && apt-get install -y curl
+      fi
+    - curl -OL https://github.com/composer-unused/composer-unused/releases/latest/download/composer-unused.phar
+    - chmod +x composer-unused.phar
+    - php composer-unused.phar
+  allow_failure: true
+
+# PHP lint
+php-cs-fixer:
+  extends: .php_job
+  stage: lint
+  script:
+    - ./vendor/bin/php-cs-fixer fix src 
+      --dry-run 
+      --diff 
+      --config=.php-cs-fixer.dist.php
+      --format=gitlab > var/reports/php-cs-fixer.json
+  artifacts:
+    when: always
+    paths:
+      - var/reports/php-cs-fixer.json
+    reports:
+      codequality: var/reports/php-cs-fixer.json
+    expire_in: 1 week
+  allow_failure: true
+
+# Twig lint
+twigcs:
+  extends: .php_job
+  stage: lint
+  script:
+    - ./vendor/bin/twigcs 
+      --ruleset 'FriendsOfTwig\Twigcs\Ruleset\Official' templates
+      --reporter checkstyle > var/reports/twigcs.xml
+  artifacts:
+    when: always
+    paths:
+      - var/reports/twigcs.xml
+    reports:
+      codequality: var/reports/twigcs.xml
+    expire_in: 1 week
+
+# SAST : Semgrep 
+semgrep:
+  stage: analysis
+  image: semgrep/semgrep:1.163.0-nonroot
+  script:
+    - semgrep scan --config=auto --quiet ./src/ ./config/ ./public/
+
+# PHPStan (analyse statique de code)
+phpstan:
+  extends: .php_job
+  stage: analysis
+  variables:
+    APP_ENV: test
+    # fausse url pour juste générer la roadmap du projet
+    DATABASE_URL: "sqlite:///:memory:"
+    CODE_EDITOR: "none"
+  script:
+    - mkdir -p var/cache/dev
+    # fausse url pour juste générer la roadmap du projet
+    - php -d display_errors=0 bin/console debug:container 
+      --format=xml > var/cache/dev/App_KernelDevDebugContainer.xml
+    - ./vendor/bin/phpstan analyse 
+      --configuration=phpstan.neon 
+      --memory-limit=1G
+      --error-format=gitlab > var/reports/phpstan.json
+  artifacts:
+    when: always
+    paths:
+      - var/reports/phpstan.json
+    reports:
+      codequality: var/reports/phpstan.json
+    expire_in: 1 week
+  allow_failure: true
+
+# Deptrac (architecture)
+deptrac:
+  extends: .php_job
+  stage: analysis
+  script:
+    - ./vendor/bin/deptrac analyse 
+      --config-file=deptrac.yaml
+      --cache-file=var/.deptrac.cache 
+      --report-uncovered > var/reports/deptrac.json
+  artifacts:
+    when: always
+    paths:
+      - var/reports/deptrac.json
+    reports:
+      codequality: var/reports/deptrac.json
+    expire_in: 1 week
+  allow_failure: true
+
+rector_check:
+  extends: .php_job
+  stage: refactor
+  script:
+    - |
+      set +e
+      ./vendor/bin/rector process --config ./rector.php --dry-run --output-format=json > ./rector-report.json
+      EXIT_CODE=$?
+      set -e
+      if [ $EXIT_CODE -eq 0 ] || [ $EXIT_CODE -eq 1 ] || [ $EXIT_CODE -eq 2 ]; then
+        exit 0
+      else
+        exit $EXIT_CODE
+      fi
+
+rector_apply:
+  extends: .php_job
+  stage: refactor
+  before_script:
+    - *init_composer
+    - apt-get update && apt-get install -y git
+    - git config --global user.email "bot.gitlab@beauvaisis.fr"
+    - git config --global user.name "BOT Gitlab"
+    - git remote set-url origin "http://RECTOR-BOT:${BOT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+  script:
+    - git checkout -B rector-fixes-$CI_COMMIT_REF_SLUG
+    - ./vendor/bin/rector process --config ./rector.php
+    - |
+      if [[ -n $(git status --porcelain) ]]; then
+        git add ./src/ ./config/ ./public/
+        git commit -m "chore(rector): apply rector refactoring [skip ci]"
+        git push origin HEAD:rector-fixes-$CI_COMMIT_REF_SLUG \
+          -o merge_request.create \
+          -o merge_request.title="Refactoring Rector improvements" \
+          -o merge_request.remove_source_branch=true --force
+      else
+        echo "Rector n'a rien trouvé à modifier."
+      fi
+  needs: ["rector_check"]
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "dev"'
+      when: always
+
+# docker dind pattern for cache
+.docker_dind_cache_pattern:
+  extends: .docker_dind_pattern
+  variables:
+    DOCKER_BUILDKIT: 1
+    CACHE_IMAGE: $CI_REGISTRY_IMAGE/cache:latest
+  before_script: &docker_gitlab_and_github_login
+    - *docker_hub_login
+    - echo "$CI_JOB_TOKEN" | docker login -u $CI_REGISTRY_USER --password-stdin $REGISTRY_URL
+    #HTTP
+    - |
+      echo '[registry."gitlab:5005"]
+        http = true
+        insecure = true' > /tmp/buildkitd.toml
+    - export DOCKER_CONTENT_TRUST=1
+    - docker context create buildcontext
+    - docker buildx create buildcontext --use 
+      --driver docker-container 
+      --driver-opt network=host 
+      --config /tmp/buildkitd.toml
+#
+# BUILD
+# img temp qui a les assets compilés etc..
+build_base:
+  extends: .docker_dind_cache_pattern
+  stage: build
+  script:
+    - docker buildx build 
+      --pull
+      --push
+      --target builder 
+      --cache-to type=registry,ref=$CACHE_IMAGE,mode=max 
+      --cache-from type=registry,ref=$CACHE_IMAGE 
+      -t $IMAGE_TAG_BUILDER 
+      -f docker/php/Dockerfile .
+
+# ... on utilise l'img de build pour ne pas rebuild les assets à chaque fois
+build:
+  extends: .docker_dind_cache_pattern
+  stage: build
+  parallel:
+    matrix:
+      - IMAGE: [$IMAGE_TAG_SYMFONY_TEMP]
+        TARGET: [symfony_runtime] 
+      - IMAGE: [$IMAGE_TAG_NGINX_TEMP]
+        TARGET: [nginx_runtime]
+  before_script:
+    - *docker_gitlab_and_github_login
+    - apk add --no-cache jq
+  script:
+    #      --sbom=true
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "test" ]; then
+        CONF_FILE="default-test.conf"
+      else
+        CONF_FILE="default-prod.conf"
+      fi
+    - docker buildx build 
+      --pull
+      --push
+      --build-arg NGINX_CONF=$CONF_FILE
+      --target $TARGET 
+      --cache-from type=registry,ref=$CACHE_IMAGE 
+      --attest=type=provenance,mode=max,version=v1
+      --output type=image,oci-mediatypes=true
+      --metadata-file metadata.json
+      -t $IMAGE 
+      -f docker/php/Dockerfile .
+    - SAFE_NAME=$(echo $IMAGE | tr ':/' '_')
+    - IMAGE_DIGEST=$(jq -r '."containerimage.digest"' metadata.json)
+    - jq '."buildx.build.provenance"' metadata.json > "provenance_${SAFE_NAME}.json"
+    - echo "$IMAGE_DIGEST" > image_digest_${SAFE_NAME}.txt
+  artifacts:
+    paths:
+      - image_digest_*.txt
+      - provenance_*.json
+    expire_in: 1 week
+  needs:
+    - job: build_base
+      artifacts: false
+
+.tests_pattern:
+  variables:
+    COMPOSE_FILE: docker-compose.yml.test
+  before_script:
+    - *docker_hub_login
+
+.docker_compose_pull_and_up_pattern:
+  script: &docker_compose_pull_and_up
+    - echo "$CI_JOB_TOKEN" | docker login -u $CI_REGISTRY_USER --password-stdin $REGISTRY_URL
+    - docker compose pull
+    - docker compose up -d --wait
+
+.doctrine_migrations_pattern:
+  script: &doctrine_migrations
+    - docker compose exec -T php php bin/console doctrine:database:create --if-not-exists --env=test
+    - docker compose exec -T php php bin/console doctrine:migrations:migrate --no-interaction --env=test
+    - docker compose exec -T php php bin/console doctrine:fixtures:load --no-interaction --env=test
+
+.get_network_pattern:
+  script: &get_network
+    - export COMPOSE_NETWORK=$(docker inspect -f '{{range $net,$conf := .NetworkSettings.Networks}}{{$net}}{{end}}' $(docker compose ps -q nginx))
+
+# TESTS
+phpunit:
+  extends: 
+    - .docker_dind_pattern
+    - .tests_pattern
+  stage: test
+  script:
+    - *docker_compose_pull_and_up
+    - *doctrine_migrations
+    - docker compose exec -T -e XDEBUG_MODE=coverage php 
+      php vendor/bin/phpunit 
+      ./tests
+      --cache-result-file=var/.phpunit.result.cache
+      --log-junit var/reports/junit.xml 
+      --coverage-xml var/reports/coverage-xml
+  after_script:
+    - docker compose cp php:/app/var/reports/ ./reports/
+    - docker compose down
+  artifacts:
+    when: always
+    paths:
+      - reports/
+    reports:
+      junit: reports/phpunit-report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: reports/coverage.xml
+    expire_in: 1 week
+
+security_smoke_test:
+  extends: 
+    - .docker_dind_pattern
+    - .tests_pattern
+  stage: test
+  script:
+    - echo "--- Démarrage du Security Smoke Test ---"
+    - *docker_compose_pull_and_up
+    # 1. On vérifie si Docker a bien injecté les restrictions depuis le YAML
+    - |
+      CAPS=$(docker inspect --format='{{json .HostConfig.CapDrop}}' $(docker-compose ps -q php))
+      if [ "$CAPS" = '["ALL"]' ]; then
+        echo "✅ Succès: Le YAML de prod applique bien le CapDrop ALL."
+      else
+        echo "❌ ÉCHEC: La config YAML n'est pas appliquée ! Trouvé: $CAPS" && exit 1
+      fi
+    # 2. Test CAP_SYS_TIME (Changer l'heure doit échouer)
+    - |
+      RESULT=$(docker compose exec -T -u root php date -s "2030-01-01" 2>&1 || true)
+      echo "Réponse du conteneur : $RESULT"
+      echo "Test: Tentative de changement d'heure (doit échouer)..."
+      if echo "$RESULT" | grep -q "Operation not permitted"; then
+        echo "✅ Succès: Le changement d'heure a été bloqué par cap_drop."
+      else
+        echo "❌ ÉCHEC: Le conteneur a pu modifier l'heure système !" && exit 1
+      fi
+
+    # 3. Test de privilèges (no-new-privileges)
+    - |
+      RESULT=$(docker compose exec -T -u root php unshare --user --map-root-user whoami 2>&1 || true)
+      echo "Réponse du conteneur : $RESULT"
+      echo "Test: Tentative d'escalade de privilèges (doit échouer)..."
+      if  echo $RESULT | grep -q "Operation not permitted"; then
+        echo "✅ Succès: L'escalade de privilèges a été bloquée."
+      else
+        echo "❌ ÉCHEC: Le flag no-new-privileges semble inactif !" && exit 1
+      fi
+  after_script:
+    - docker compose down
+  rules:
+    #- if: '$CI_COMMIT_REF_NAME == "dev" || $CI_COMMIT_REF_NAME =~ /^renovate\//'
+    #  when: never
+    #- if: '$CI_COMMIT_REF_NAME == "test"'
+    #  when: always
+    #- if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    #  when: always
+    - when: never
+
+# tets de sécurité du service Nginx 
+owasp_zap:
+  extends: 
+    - .docker_dind_pattern
+    - .tests_pattern
+  stage: test
+  variables:
+    ZAP_SCRIPT: "zap-baseline.py"
+  script:
+    - *docker_compose_pull_and_up
+    - docker pull ghcr.io/zaproxy/zaproxy:stable
+    - *get_network
+    # Lancement de ZAP
+    - docker run --rm 
+      --network="$COMPOSE_NETWORK" 
+      -v "${PWD}:/zap/wrk/:rw" 
+      ghcr.io/zaproxy/zaproxy:stable $ZAP_SCRIPT 
+      -t http://nginx:8080 -r report.html
+  after_script:
+    - docker compose down
+  artifacts:
+    when: always
+    paths:
+      - report.html
+    expire_in: 1 week
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "web"'
+      variables:
+        ZAP_SCRIPT: "zap-full-scan.py"
+    - when: always
+  allow_failure: true
+  rules:
+    #- if: '$CI_COMMIT_REF_NAME == "dev" || $CI_COMMIT_REF_NAME =~ /^renovate\//'
+    #  when: never
+    #- if: '$CI_COMMIT_REF_NAME == "test"'
+    #  when: on_success
+    #- if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    #  when: on_success
+    - when: never
+
+ffuf:
+  extends: 
+    - .docker_dind_pattern
+    - .tests_pattern
+  stage: test
+  script:
+    - *docker_compose_pull_and_up
+    - *get_network
+    # Lancement de ffuf pour fuzzing basique sur les endpoints de l'API
+    - docker run --rm 
+      --network="$COMPOSE_NETWORK" 
+      -v "${PWD}:/mnt" alpine sh -c "apk add --no-cache ffuf && ffuf 
+      -c -w /mnt/fuzz.txt -u http://nginx:8080/agent/security/login 
+      -X POST -d '_username=FUZZ&_password=admin' -mc 500
+      -o /mnt/ffuf_report.json -of json" 
+  after_script:
+    - docker compose down
+  artifacts:
+    when: always
+    paths:
+      - ffuf_report.json
+    expire_in: 1 week
+  allow_failure: true
+  rules:
+    #- if: '$CI_COMMIT_REF_NAME == "dev" || $CI_COMMIT_REF_NAME =~ /^renovate\//'
+    #  when: never
+    #- if: '$CI_COMMIT_REF_NAME == "test"'
+    #  when: on_success
+    #- if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    #  when: on_success
+    - when: never
+
+grafana-k6:
+  extends: 
+    - .docker_dind_pattern
+    - .tests_pattern
+  stage: test
+  script:
+    - *docker_compose_pull_and_up
+    - *doctrine_migrations
+    - *get_network
+    # Lancement de k6 pour un test de charge basique sur l'endpoint de login GET + POST
+    - docker run --rm 
+      --network="$COMPOSE_NETWORK" 
+      -v "${PWD}:/mnt" grafana/k6 run /mnt/load-test.js --out json=/mnt/k6_report.json
+  after_script:
+    - docker compose down
+  artifacts:
+    when: always
+    paths:
+      - k6_report.json
+    expire_in: 1 week
+  allow_failure: true
+  rules:
+    #- if: '$CI_COMMIT_REF_NAME == "dev" || $CI_COMMIT_REF_NAME =~ /^renovate\//'
+    #  when: never
+    #- if: '$CI_COMMIT_REF_NAME == "test"'
+    #  when: on_success
+    #- if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    #  when: on_success
+    - when: never
+
+infection_php:
+  extends: 
+    - .docker_dind_pattern
+    - .tests_pattern
+  stage: test
+  script:
+    - *docker_compose_pull_and_up
+    - *doctrine_migrations
+    - docker compose exec -T php ./vendor/bin/infection 
+      --threads=4 
+      --coverage=reports/coverage.xml 
+      --min-msi=20 
+      --show-mutations
+  after_script:
+    - docker compose cp php:/app/var/reports/ ./reports/
+    - docker compose down
+  artifacts:
+    when: always
+    paths:
+      - reports/
+    expire_in: 1 week
+  needs:
+    - job: phpunit
+      artifacts: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+    - when: never
+  allow_failure: true
+
+# patern for docker image scan
+.docker_scan_pattern:
+  parallel:
+    matrix:
+      - IMAGE: [$IMAGE_TAG_SYMFONY_TEMP, $IMAGE_TAG_NGINX_TEMP]
+#
+# SCAN : Dockle
+dockle:
+  extends: .docker_scan_pattern
+  stage: scan
+  image: 
+    name: goodwithtech/dockle:v0.4.15
+    entrypoint: [""]
+  variables:
+    DOCKLE_USERNAME: "$CI_REGISTRY_USER"
+    DOCKLE_PASSWORD: "$CI_JOB_TOKEN"
+  script:
+    - export DOCKER_CONTENT_TRUST=1
+    # DKL-DI-0005 : dans l'img de PHP officielle, ils n'ont pas exec rm -rf /var/lib/apt/lists
+    # et dockle générère une alerte là-dessus /!\
+    # Accept key car Nginx a une clé publique dans l'img
+    - dockle --ignore DKL-DI-0005 --accept-key KEY_SHA512 --insecure --exit-code 1 --exit-level WARN $IMAGE
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "dev"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "test"'
+      when: on_success
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: on_success
+
+# SCAN : Syft (SBOM)
+syft:
+  extends: .docker_scan_pattern
+  stage: scan
+  image: 
+    name: alpine:3.22.4
+  variables:
+    SYFT_REGISTRY_AUTH_USERNAME: "$CI_REGISTRY_USER"
+    SYFT_REGISTRY_AUTH_PASSWORD: "$CI_JOB_TOKEN"
+    SYFT_REGISTRY_INSECURE_SKIP_TLS_VERIFY: "true"
+    SYFT_REGISTRY_INSECURE_USE_HTTP: "true"
+  before_script:
+    - apk add --no-cache curl
+    - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+  script:
+    - SAFE_NAME=$(echo $IMAGE | tr ':/' '_')
+    - syft registry:$IMAGE --output cyclonedx-json=sbom-${SAFE_NAME}.json
+  artifacts:
+    paths:
+      - sbom-*.json
+    expire_in: 30 days
+  rules:
+    - if: $CI_COMMIT_REF_NAME =~ /^renovate\//
+      when: always
+    - if: '$CI_COMMIT_REF_NAME == "dev"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "test"'
+      when: on_success
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: on_success
+
+# SCAN : Grype
+grype:
+  extends: .docker_scan_pattern
+  stage: scan
+  image: alpine:3.22.4
+  before_script:
+    - apk add --no-cache curl
+    - curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+  script:
+    - SAFE_NAME=$(echo $IMAGE | tr ':/' '_')
+    - grype sbom:sbom-${SAFE_NAME}.json 
+      --fail-on high 
+      --only-fixed 
+      --config .grype.yaml
+  needs:
+    - job: syft
+      artifacts: true
+  rules:
+    - if: $CI_COMMIT_REF_NAME =~ /^renovate\//
+      when: always
+    - if: '$CI_COMMIT_REF_NAME == "dev"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "test"'
+      when: on_success
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: on_success
+
+# patern for push & sign docker image
+.docker_push_and_sign_pattern:
+  parallel:
+    matrix:
+      - IMAGE_TEMP: [$IMAGE_TAG_SYMFONY_TEMP]
+        IMAGE_LATEST: [$IMAGE_TAG_SYMFONY_LATEST]
+      - IMAGE_TEMP: [$IMAGE_TAG_NGINX_TEMP]
+        IMAGE_LATEST: [$IMAGE_TAG_NGINX_FINAL]
+#
+# PROMOTE : Tag :latest SI tests + scans OK
+promote:
+  extends: 
+    - .docker_push_and_sign_pattern
+    - .docker_dind_pattern
+  stage: push
+  before_script:
+    - *docker_hub_login
+  script:
+    - echo "$CI_JOB_TOKEN" | docker login -u $CI_REGISTRY_USER --password-stdin $REGISTRY_URL
+    - docker pull $IMAGE_TEMP
+    - docker tag $IMAGE_TEMP $IMAGE_LATEST
+    - docker push $IMAGE_LATEST
+    #- docker rmi $IMAGE_TEMP
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "dev"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "test"'
+      when: on_success
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: on_success
+
+# SIGN : Cosign
+slsa-attestation:
+  extends: .docker_push_and_sign_pattern
+  stage: sign
+  image: alpine:3.22.4
+  before_script:
+    - apk add --no-cache curl
+    - curl -sL https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64 -o /usr/local/bin/cosign
+    - chmod +x /usr/local/bin/cosign
+  script:
+    - echo "$CI_JOB_TOKEN" | cosign login $REGISTRY_URL -u "$CI_REGISTRY_USER" --password-stdin
+    # Pour retrouver le digest
+    - SAFE_NAME=$(echo $IMAGE_TEMP | tr ':/' '_') 
+    - IMAGE_DIGEST=$(cat image_digest_${SAFE_NAME}.txt)
+    - REPO_NAME=$(echo $IMAGE_LATEST | cut -d':' -f1-2)
+    - IMAGE_WITH_DIGEST="${REPO_NAME}@${IMAGE_DIGEST}"
+    # key
+    - echo "$COSIGN_PRIVATE_KEY" > cosign.key
+    # On signe sans Keyless car pas sur GitLab.com
+    - cosign sign 
+      --yes 
+      --allow-http-registry 
+      --key cosign.key $IMAGE_WITH_DIGEST
+    # Signature de la provenance de BuildKit
+    # Étant donné la provenance est collée à mon img (OCID) pas besoin de signer un par un on signe le tout direct
+    - cosign attest 
+      --yes 
+      --allow-http-registry 
+      --key cosign.key 
+      --type slsaprovenance02 
+      --predicate provenance_${SAFE_NAME}.json $IMAGE_WITH_DIGEST
+    # Signature du SBOM natif de Buildkit 
+    # ne fonctionne sûrement pas car déjà sur le registry...
+    # - cosign attest --yes --allow-http-registry --key cosign.key --type spdx $IMAGE_WITH_DIGEST
+    # Signature du SBOM de Syft
+    - SAFE_NAME_TEMP=$(echo $IMAGE_TEMP | tr ':/' '_')
+    - cosign attest 
+      --yes --allow-http-registry 
+      --key cosign.key 
+      --predicate sbom-${SAFE_NAME_TEMP}.json 
+      --type cyclonedx $IMAGE_WITH_DIGEST
+    - rm cosign.key
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "dev"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "test"'
+      when: on_success
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: on_success
+  needs:
+    - job: build
+      artifacts: true
+    - job: syft
+      artifacts: true
+    - job: promote
+      artifacts: false
+
+# DEPLOY
+deploy-production:
+  stage: deploy
+  image: alpine:3.22.4
+  environment: production
+  before_script:
+    - apk add --no-cache curl
+    - curl -sL https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64 -o /usr/local/bin/cosign
+    - chmod +x /usr/local/bin/cosign
+  script:
+    - echo "$CI_JOB_TOKEN" | cosign login $CI_REGISTRY -u "$CI_REGISTRY_USER" --password-stdin
+    - echo "$COSIGN_PUBLIC_KEY" > cosign.pub
+    # on vérifie l'img...
+    - cosign verify --key cosign.pub --allow-http-registry $IMAGE_TAG_SYMFONY_LATEST   
+    # ... le sbom... > /dev/null car ça affiche 1 milliard de char dans la console et le runner s'arrête 
+    - cosign verify-attestation --key cosign.pub --type cyclonedx --allow-http-registry $IMAGE_TAG_SYMFONY_LATEST > /dev/null
+    # ... et la provenance
+    # je peux pas la signer car elle "n'existe pas" elle est collée à mon image je peux pas la recup comme ça 
+    - cosign verify-attestation --key cosign.pub --type slsaprovenance02 --allow-http-registry $IMAGE_TAG_SYMFONY_LATEST
+    # et idem pour nginx
+    - cosign verify --key cosign.pub --allow-http-registry $IMAGE_TAG_NGINX_FINAL
+    - cosign verify-attestation --key cosign.pub --type cyclonedx --allow-http-registry $IMAGE_TAG_NGINX_FINAL > /dev/null
+    - cosign verify-attestation --key cosign.pub --type slsaprovenance02 --allow-http-registry $IMAGE_TAG_NGINX_FINAL
+    - echo "Signature validée ! L'image est authentique et provient de notre pipeline sécurisé."
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+    - rm cosign.pub
+  only:
+    - main
+    - test
