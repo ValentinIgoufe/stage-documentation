@@ -6,7 +6,7 @@ services:
             - mariadb
             - mailsender
         environment:
-            - APP_DEBUG=0
+            #- APP_DEBUG=0
             - MAIL_FROM=${MAIL_FROM}
             - MAIL_SUBJECT_PREFIX=${MAIL_SUBJECT_PREFIX}
             - MAIL_MONOLOG_TO=${MAIL_MONOLOG_TO}
@@ -32,7 +32,7 @@ services:
             - LOCK_DSN=${LOCK_DSN}
             - MAILER_DSN=${MAILER_DSN}
         healthcheck:
-            test: ["CMD", "nc", "-z", "localhost", "9000"]
+            test: ["CMD", "php-fpm", "-t"]
             interval: 5s
             timeout: 3s
             retries: 3
@@ -54,7 +54,7 @@ services:
         ports:
             - "99:8080"
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8080"]
+            test: ["CMD", "wget", "-qO-", "http://localhost:8080"]
             interval: 5s
             timeout: 5s
             retries: 3

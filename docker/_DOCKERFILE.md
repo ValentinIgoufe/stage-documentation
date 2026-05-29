@@ -5,7 +5,7 @@
 
 ### Les changements : 
 
-> **Le multi-stage** : Permet de séparer la logique dans notre Dockerfile, les outils de build (composer install, npm install) ne sont plus dans l'image buildée ! En effet, dans celle-ci on copie uniquement le résultat des builds et non les outils, l'image est donc plus légère et on a réduit sa surface d'attaque.
+> **Le multi-stage** : Permet de séparer la logique dans notre Dockerfile, les outils de build (composer install, npm install) ne sont plus dans l'image de prod ! En effet, dans celle-ci on copie uniquement le résultat des builds et non les outils, l'image est donc plus légère et on a réduit sa surface d'attaque. Et on utilise des images hardened pour la prod, proches de 0 CVEs et très légère : on passe de ~2Go à 400mo pour php sur fmd.
 
 > **Healthcheck** : L'image se ping elle-même pour savoir si elle est en vie (recommandation de Dockle - utile pour l'orchestration).
 

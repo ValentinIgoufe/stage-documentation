@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>mon-groupe/renovate-bot:default"],
-  "assignees": ["l.gasteau"],
+  "extends": [
+    "local>mon-groupe/renovate-bot:default"
+  ],
   "packageRules": [
     {
       "description": "Maj environnement PHP : Dockerfile, composer.json et gitlab-ci",
@@ -10,7 +11,7 @@
       "semanticCommitType": "chore",
       "semanticCommitScope": "maj-env-php",
       "commitMessageAction": "Mise à jour env PHP :",
-      "matchPackageNames": ["php", "docker.io/library/php", "php-fpm", "containerbase/php-prebuild"],
+      "matchPackageNames": ["php", "docker.io/library/php", "php-fpm", "containerbase/php-prebuild", "dhi.io/php"],
       "matchManagers": ["composer", "dockerfile", "gitlabci", "custom.regex"],
       "postUpdateOptions": ["composerWithAll"]
     },
@@ -24,12 +25,13 @@
       "commitMessageAction": "Mise à jour majeures :",
       "matchManagers": ["composer", "npm", "gitlabci", "dockerfile", "docker-compose"],
       "matchUpdateTypes": ["major"],
-      "excludePackageNames": ["php", "docker.io/library/php", "library/php", "php-fpm", "containerbase/php-prebuild"],
+      "excludePackageNames": ["php", "docker.io/library/php", "library/php", "php-fpm", "containerbase/php-prebuild", "dhi.io/php"],
       "excludePackagePatterns": [
         "^php:",
         "^php-",
         "^docker\\.io/library/php:",
-        "^containerbase/php-prebuild:"
+        "^containerbase/php-prebuild:",
+        "^dhi.io/php:"
       ],
       "dependencyDashboardApproval": false,
       "postUpdateOptions": ["composerWithAll", "npmDedupe"]
@@ -43,12 +45,13 @@
       "commitMessageAction": "Mise à jour mineures :",
       "matchManagers": ["composer", "npm", "gitlabci", "dockerfile", "docker-compose"],
       "matchUpdateTypes": ["minor", "patch", "bump", "pin", "digest", "pinDigest"],
-      "excludePackageNames": ["php", "docker.io/library/php", "php-fpm", "containerbase/php-prebuild"],
+      "excludePackageNames": ["php", "docker.io/library/php", "library/php" ,"php-fpm", "containerbase/php-prebuild", "dhi.io/php"],
       "excludePackagePatterns": [
         "^php:",
         "^php-",
         "^docker\\.io/library/php:",
-        "^containerbase/php-prebuild:"
+        "^containerbase/php-prebuild:",
+        "^dhi.io/php:"
       ],
       "postUpdateOptions": ["composerWithAll", "npmDedupe"],
       "automerge": true

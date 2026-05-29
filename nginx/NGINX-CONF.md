@@ -2,6 +2,8 @@
 
 ### Ajouts : 
 
+> **Ajouts** pour coller avec l'image nginx hardened de Chainguard.
+
 > **Plein d'ajouts de sécurité** pour le test de DAST avec OWASP-ZAP
 
 > **Build JS,CSS** sont stockés sur NGINX
