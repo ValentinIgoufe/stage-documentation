@@ -11,6 +11,10 @@
 
 > * [Installation de Renovate](RENOVATE_INSTALLATION.md)
 
+### Le cache des Runners : 
+
+> Si le build failed parce que le .lock n'est pas à jour mais que dans changes le .lock est bien modifié il faut clear le cache du runner et relancer le pipeline. On peut sûrement invalidé le cache du runner avec une key en fonction de la semaine dans le gitlab-ci.yaml.
+
 ### La configuration de Renovate : 
 
 > :bangbang: 
@@ -29,7 +33,7 @@ Les fichiers suivants sont inclus dans repo_renovate mais ne sont peut-être plu
 
 > **extends** : Héritage d'une config (***exemple*** : renovate.json hérite de default.json). Pourquoi **["config:best-practices"]** ? -> https://docs.renovatebot.com/presets-config/.
 
-> **fetchChangeLogs** : Avoir les détails de chaque nouvelle version dans la MR. Pourquoi **off** -> plus il y a de projets plus il y a de MAJs plus il y a de logs = le temps d'exécution de Renovate devient **exponentiel**.
+> **fetchChangeLogs** : Avoir les détails de chaque nouvelle version dans la MR. Pourquoi **off** -> plus il y a de projets et de mises à jour, plus il y a de logs, donc le temps d'exécution de Renovate peut devenir **exponentiel**.
 
 > **pr...** : Permet de définir une limite de MRs, ici 0 donc illimité.
 
@@ -39,7 +43,7 @@ Les fichiers suivants sont inclus dans repo_renovate mais ne sont peut-être plu
 
 > **rangeStrategy** : Permet de définir la portée des MAJ que Renovate va installer. Dans cette configuration, on utilise **bump**, ce qui permet de mettre la version exacte, du package qui est installé, dans le composer.json (pas de ^5.0.0).
 
-> **separateMajorMinor** : Séparer les MAJs majeures et mineures.
+> **separateMajorMinor** : Séparer les mises à jour majeures et mineures.
 
 > **composerIgnorePlatformReqs** : Permet d'exclure des librairies lors d'un composer update.
 

@@ -5,7 +5,10 @@
 
 ### Les changements : 
 
-> **Le multi-stage** : Permet de séparer la logique dans notre Dockerfile, les outils de build (composer install, npm install) ne sont plus dans l'image de prod ! En effet, dans celle-ci on copie uniquement le résultat des builds et non les outils, l'image est donc plus légère et on a réduit sa surface d'attaque. Et on utilise des images hardened pour la prod, proches de 0 CVEs et très légère : on passe de ~2Go à 400mo pour php sur fmd.
+> **Le multi-stage** : Permet de séparer la logique dans notre Dockerfile. Les outils de build (`composer install`, `npm install`) ne sont plus dans l'image de prod : on ne copie que le résultat des builds, ce qui rend l'image plus légère et réduit sa surface d'attaque. Nous utilisons des images hardened pour la prod, proches de 0 CVE et très légères : on passe de ~2 Go à 400 Mo pour PHP sur FMD. 
+:bangbang:
+C'est vrai, on gagne de la place, mais il manque des dépendances système pour PHP. On ne peut donc pas toujours utiliser une image hardened prête à l'emploi, ou il faut payer pour une image hardened avec `sh` et `apt` (https://hub.docker.com/hardened-images/catalog/dhi/php).
+:bangbang:
 
 > **Healthcheck** : L'image se ping elle-même pour savoir si elle est en vie (recommandation de Dockle - utile pour l'orchestration).
 

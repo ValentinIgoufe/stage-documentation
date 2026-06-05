@@ -17,20 +17,23 @@
 
 > Enfin push dans le repository de Renovate.
 
-### 2/ Créer 2 Tokens pour Renovate
+### 2/ Créer 3 Tokens pour Renovate
 
 > **1 :** Un Personal Access Token GitLab avec les droits `api`, `read_repository` et `write_repository`. Cliquer sur l'image de profil (GitLab) en haut à droite puis Settings, Access Tokens et ajouter un nouveau token avec les droits : api, write_repository et read_repository. 
 
 > **2 :** Un Personal Access Token GitHub pour avoir les informations sur chaque version dans la Merge Request. Cliquer sur l'image de profil en haut à droite (GitHub) puis Settings, Developer Settings, Personal access tokens, Tokens (classic) et Generate new token (classic). Aucun droit spécifique n'est nécessaire puisque c'est juste pour examiner les dépôts publics des packages, Renovate a simplement besoin de se connecter.
 (Doc : https://docs.renovatebot.com/mend-hosted/github-com-token/)
 
+> **3 :** Un Personal Access Token DockerHub pour que Renovate puisse proposer les mis à jours des images **hardened** (il faut s'identifier sur le **Docker Hardened Images**). Se connecter sur DockerHub, cliquer sur son profil puis Account Settings, Personal access tokens (à gauche), Generate new token et choisir un nom (Public Repo Read-only est suffisant).
+
 ### 3/ Injecter les tokens dans les variables CI/CD Gitlab
 
-> Dans le dépôt de Renovate fraîchement créé, à gauche, cliquer sur Settings, CI/CD, Variables et ajouter 2 variables :
+> Dans le dépôt de Renovate fraîchement créé, à gauche, cliquer sur Settings, CI/CD, Variables et ajouter 3 variables :
 > - `key: RENOVATE_TOKEN`, `value:` celle du Personal Access Token GitLab
 > - `key: GITHUB_COM_TOKEN`, `value:` celle du Personal Access Token GitHub
-> 
-> On peut laisser Protected (variables injectées uniquement dans les branches protégées :bangbang: ***par défaut Renovate ne scanne que le main, si on veut qu'il ne scanne que dev par ex., il faudra définir dev en tant que protected branch ou décocher Protected pour les tokens dans les variables CI/CD, sinon GitLab ne pourra pas les donner au Runner*** :bangbang:) et Masked (non visibles dans la console du Runner).
+> - `key : DOCKER_AUTH_CONFIG`, `value:` {"auths":{"dhi.io":{"auth":"**string**"}}}. 
+> Pour obtenir **string**, powershell : [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("**username**:**Personal Access Token DockerHub**")). N'est pas utile si vous enlevez les Hardened Images dans la CI ou le build (Syft & anciennement PHP).
+> On peut laisser `Protected` (variables injectées uniquement dans les branches protégées :bangbang: ***par défaut, Renovate ne scanne que la branche `main`. Si on veut qu'il ne scanne que `dev`, il faudra définir `dev` comme branche protégée ou décocher `Protected` pour les tokens dans les variables CI/CD, sinon GitLab ne pourra pas les donner au Runner*** :bangbang:) et `Masked` (non visibles dans la console du Runner).
 
 ### 4/ Programmer un pipeline schedule
 
@@ -55,7 +58,7 @@
 
 ### Trucs et astuces 
 
-> **chore(deps): lock file maintenance** : Il est possible de retrouver ceci dans le Dependency Dashboard (Work items). En effet, les MAJs de Renovate se base sur le composer.json, cependant les sous-dépendances ne sont pas inscriptes dans celui-ci mais dans le composer.lock. Ainsi, si l'on coche ce lock file maintenance, Renovate mettra à jour les sous-dépendances.
+> **chore(deps): lock file maintenance** : Il est possible de retrouver ceci dans le Dependency Dashboard (Work items). En effet, les mises à jour de Renovate se basent sur le `composer.json`, mais les sous-dépendances ne sont pas inscrites dans celui-ci : elles sont dans le `composer.lock`. Ainsi, si l'on coche cette option de lock file maintenance, Renovate mettra à jour les sous-dépendances.
 
 > **Pourquoi ce gitlab-ci ?** : J'ai copié celui du renovate-runner officiel de GitLab : https://gitlab.com/renovate-bot/renovate-runner
 

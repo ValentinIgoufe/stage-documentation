@@ -1,0 +1,55 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:nightly
+    container_name: gitlab
+    restart: always
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab'
+        gitlab_rails['gitlab_shell_ssh_port'] = 22
+        gitlab_rails['initial_root_password'] = 'password'
+        nginx['listen_port'] = 80
+
+        gitlab_rails['registry_path'] = "/var/opt/gitlab/gitlab-rails/shared/registry"
+        registry['enable'] = true
+        registry_external_url 'http://gitlab:5005'
+        registry_nginx['listen_port'] = 5005
+        registry_nginx['listen_https'] = false
+
+        puma['worker_processes'] = 0
+    ports:
+      - "80:80"
+      - "22:22"
+      - "5005:5005"
+    volumes:
+      - gitlab-config:/etc/gitlab          
+      - gitlab-logs:/var/log/gitlab       
+      - gitlab-data:/var/opt/gitlab
+    networks:
+      - gitlab-net
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    restart: always
+    depends_on:
+      - gitlab
+    volumes:
+      - ./runner-config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - gitlab-net
+    extra_hosts:
+    - "localhost:172.18.0.3"
+
+networks:
+  gitlab-net:
+    driver: bridge
+
+volumes:
+  gitlab-config:
+    external: true
+  gitlab-logs:
+    external: true
+  gitlab-data:
+    external: true

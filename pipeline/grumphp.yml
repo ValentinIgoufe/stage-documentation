@@ -1,0 +1,82 @@
+# grumphp.yml
+grumphp:
+    git_hook_variables:
+        EXEC_GRUMPHP_COMMAND: docker compose exec -T php php
+    hooks_dir: ~
+    hooks_preset: local
+    stop_on_failure: true
+    ignore_unstaged_changes: false
+    hide_circumvention_tip: false
+    process_timeout: 360
+    parallel:
+        enabled: false
+    ascii:
+        failed: ~
+        succeeded: ~
+    tasks:
+        composer: ~
+        git_blacklist:
+            keywords:
+                - "die("
+                - "var_dump("
+                - "dd("
+                - "exit;"
+            triggered_by: ['php']
+            regexp_type: G
+            match_word: true
+        git_commit_message:
+            allow_empty_message: false
+            enforce_capitalized_subject: false
+            enforce_no_subject_trailing_period: false
+            enforce_single_lined_subject: false
+            max_body_width: 120
+            max_subject_width: 120
+            multiline: true
+            additional_modifiers: ''
+        phpcsfixer2:
+            allow_risky: true
+            cache_file: '.php_cs.cache'
+            config: .php-cs-fixer.dist.php
+            rules: []
+            using_cache: false
+            config_contains_finder: true
+            verbose: true
+            diff: false
+            triggered_by: ['php']
+        phpunit: ~
+        securitychecker_enlightn:
+            lockfile: ./composer.lock
+        twigcs:
+            path: 'templates'
+            severity: 'warning'
+            display: 'all'
+            ruleset: 'FriendsOfTwig\Twigcs\Ruleset\Official'
+            triggered_by: ['twig']
+            exclude: ["vendor"]
+        doctrine_schema_validate:
+            skip_mapping: false
+            skip_sync: false
+            triggered_by: [ 'php', 'xml', 'yml' ]
+        rector: ~
+        #symfony_console:
+        #    bin: "./bin/console"
+        #    command: [ "lint:container", "-vvv" ]
+        #    triggered_by: [ 'php', 'yml', 'xml' ]
+        #    run_always: true
+        #securitychecker_composeraudit:
+        #    abandoned: report
+        #    format: table
+        #    locked: true
+        #    no_dev: false
+        #    run_always: true
+        deptrac:
+          cache_file: var/.deptrac.cache
+          depfile: deptrac.yaml
+        phpstan:
+            configuration: phpstan.neon
+            memory_limit: 1G
+            triggered_by: ['php']
+
+    testsuites: []
+    extensions:
+        - JonMldr\GrumPhpDoctrineTask\ExtensionLoader

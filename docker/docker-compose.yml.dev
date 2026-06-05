@@ -1,10 +1,18 @@
 services:
     php:
-        image: symfony-fmd:latest
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+            target: symfony_runtime
+            cache_from:
+                - type=registry,ref=symfony_fmd:latest
+        image: symfony_fmd:latest
         restart: on-failure
         depends_on:
-            - mariadb
-            - mailsender
+            mariadb:
+                condition: service_healthy
+            mailsender:
+                condition: service_started
         environment:
             #- APP_DEBUG=0
             - MAIL_FROM=${MAIL_FROM}
@@ -47,7 +55,13 @@ services:
             - no-new-privileges:true
 
     nginx:
-        image: nginx-fmd:latest
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+            target: nginx_runtime
+            args:
+                NGINX_CONF: default-dev.conf
+        image: nginx_fmd:latest
         restart: on-failure
         environment:
             TZ: Europe/Paris
@@ -67,7 +81,8 @@ services:
         security_opt:
             - no-new-privileges:true
         depends_on:
-            - php
+            php:
+                condition: service_healthy
 
     #serveur de base de donnees
     mariadb:
@@ -80,7 +95,7 @@ services:
             MYSQL_ROOT_PASSWORD: 7Tw6MsCyZ3iyPsqis6e
             TZ: Europe/Paris
         volumes:
-            - ./docker/mariadb/:/var/lib/mysql/
+            - mariadb_data:/var/lib/mysql/
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p7Tw6MsCyZ3iyPsqis6e"]
             interval: 5s
@@ -94,3 +109,6 @@ services:
         environment:
             MAILDEV_SMTP_PORT: 25
             TZ: Europe/Paris
+
+volumes:
+    mariadb_data:

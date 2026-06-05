@@ -1,0 +1,1467 @@
+{
+  "schema": "https://gitlab.com/gitlab-org/security-products/security-report-schemas/-/raw/v15.0.4/dist/sast-report-format.json",
+  "version": "15.0.4",
+  "scan": {
+    "scanner": {
+      "id": "plumber",
+      "name": "Plumber",
+      "version": "dev",
+      "vendor": {
+        "name": "Plumber"
+      },
+      "url": "https://getplumber.io"
+    },
+    "analyzer": {
+      "id": "plumber",
+      "name": "Plumber",
+      "version": "dev",
+      "vendor": {
+        "name": "Plumber"
+      },
+      "url": "https://getplumber.io"
+    },
+    "type": "sast",
+    "start_time": "2026-05-28T13:51:29",
+    "end_time": "2026-05-28T13:51:29",
+    "status": "success"
+  },
+  "vulnerabilities": [
+    {
+      "id": "4aaa9ebb-3fc5-41b3-ef52-71eacf3fbf8e",
+      "name": "Untrusted image source",
+      "message": "job \"dockle\" uses image from untrusted source: docker.io/goodwithtech/dockle:v0.4.15",
+      "description": "A container image is pulled from a registry that is not listed in the authorized sources. Using untrusted registries increases supply chain attack risk.\n\nFinding: job \"dockle\" uses image from untrusted source: docker.io/goodwithtech/dockle:v0.4.15",
+      "severity": "High",
+      "solution": "Use images from an authorized registry configured in .plumber.yaml under containerImageMustComeFromAuthorizedSources.authorizedSources, or add the registry to the authorized list.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-101: Untrusted image source",
+          "value": "ISSUE-101",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-101"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 485
+      }
+    },
+    {
+      "id": "29df099f-ee82-e2f5-b96c-098c8a691859",
+      "name": "Untrusted image source",
+      "message": "job \"grype\" uses image from untrusted source: cgr.dev/chainguard/grype:latest@sha256",
+      "description": "A container image is pulled from a registry that is not listed in the authorized sources. Using untrusted registries increases supply chain attack risk.\n\nFinding: job \"grype\" uses image from untrusted source: cgr.dev/chainguard/grype:latest@sha256",
+      "severity": "High",
+      "solution": "Use images from an authorized registry configured in .plumber.yaml under containerImageMustComeFromAuthorizedSources.authorizedSources, or add the registry to the authorized list.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-101: Untrusted image source",
+          "value": "ISSUE-101",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-101"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 537
+      }
+    },
+    {
+      "id": "edf0fdea-4a2d-1b24-a4c1-329e3fa6fc54",
+      "name": "Untrusted image source",
+      "message": "job \"hadolint\" uses image from untrusted source: docker.io/hadolint/hadolint:v2.14.0-alpine",
+      "description": "A container image is pulled from a registry that is not listed in the authorized sources. Using untrusted registries increases supply chain attack risk.\n\nFinding: job \"hadolint\" uses image from untrusted source: docker.io/hadolint/hadolint:v2.14.0-alpine",
+      "severity": "High",
+      "solution": "Use images from an authorized registry configured in .plumber.yaml under containerImageMustComeFromAuthorizedSources.authorizedSources, or add the registry to the authorized list.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-101: Untrusted image source",
+          "value": "ISSUE-101",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-101"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 93
+      }
+    },
+    {
+      "id": "7231eb5e-c868-6b6f-4fab-cc86ebdce4ce",
+      "name": "Untrusted image source",
+      "message": "job \"plumber\" uses image from untrusted source: docker.io/getplumber/plumber@sha256:cb3b1e4476401bb0e06a519de8aeef05ed194a078ca9b30896935bc10cdae7fb",
+      "description": "A container image is pulled from a registry that is not listed in the authorized sources. Using untrusted registries increases supply chain attack risk.\n\nFinding: job \"plumber\" uses image from untrusted source: docker.io/getplumber/plumber@sha256:cb3b1e4476401bb0e06a519de8aeef05ed194a078ca9b30896935bc10cdae7fb",
+      "severity": "High",
+      "solution": "Use images from an authorized registry configured in .plumber.yaml under containerImageMustComeFromAuthorizedSources.authorizedSources, or add the registry to the authorized list.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-101: Untrusted image source",
+          "value": "ISSUE-101",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-101"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "5f618244-674c-c4e7-cc3d-3bdb2ed4dd52",
+      "name": "Untrusted image source",
+      "message": "job \"semgrep\" uses image from untrusted source: docker.io/semgrep/semgrep:1.163.0-nonroot",
+      "description": "A container image is pulled from a registry that is not listed in the authorized sources. Using untrusted registries increases supply chain attack risk.\n\nFinding: job \"semgrep\" uses image from untrusted source: docker.io/semgrep/semgrep:1.163.0-nonroot",
+      "severity": "High",
+      "solution": "Use images from an authorized registry configured in .plumber.yaml under containerImageMustComeFromAuthorizedSources.authorizedSources, or add the registry to the authorized list.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-101: Untrusted image source",
+          "value": "ISSUE-101",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-101"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 169
+      }
+    },
+    {
+      "id": "a2ed1144-8686-c168-8f88-1b96a8060586",
+      "name": "Untrusted image source",
+      "message": "job \"slsa-attestation\" uses image from untrusted source: cgr.dev/chainguard/cosign:latest@sha256",
+      "description": "A container image is pulled from a registry that is not listed in the authorized sources. Using untrusted registries increases supply chain attack risk.\n\nFinding: job \"slsa-attestation\" uses image from untrusted source: cgr.dev/chainguard/cosign:latest@sha256",
+      "severity": "High",
+      "solution": "Use images from an authorized registry configured in .plumber.yaml under containerImageMustComeFromAuthorizedSources.authorizedSources, or add the registry to the authorized list.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-101: Untrusted image source",
+          "value": "ISSUE-101",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-101"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 610
+      }
+    },
+    {
+      "id": "79040245-6fc8-4417-61ab-6ca7a011722c",
+      "name": "Untrusted image source",
+      "message": "job \"syft\" uses image from untrusted source: dhi.io/syft@sha256:5827400e1f8401e8b925687aa38624ada774b5480153ddbe342815a68559b8ef",
+      "description": "A container image is pulled from a registry that is not listed in the authorized sources. Using untrusted registries increases supply chain attack risk.\n\nFinding: job \"syft\" uses image from untrusted source: dhi.io/syft@sha256:5827400e1f8401e8b925687aa38624ada774b5480153ddbe342815a68559b8ef",
+      "severity": "High",
+      "solution": "Use images from an authorized registry configured in .plumber.yaml under containerImageMustComeFromAuthorizedSources.authorizedSources, or add the registry to the authorized list.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-101: Untrusted image source",
+          "value": "ISSUE-101",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-101"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 508
+      }
+    },
+    {
+      "id": "140ec4f8-264b-973b-d1e3-8750633a5c9f",
+      "name": "Hardcoded job",
+      "message": "job \".docker_compose_cleanup\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_compose_cleanup\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "3e498733-4335-937d-64fa-bb90bbd03026",
+      "name": "Hardcoded job",
+      "message": "job \".docker_compose_pull_and_up_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_compose_pull_and_up_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "4159da01-b4c1-ab2e-6df0-b321272538dc",
+      "name": "Hardcoded job",
+      "message": "job \".docker_compose_with_migrations_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_compose_with_migrations_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "1d1c636c-bcae-01a0-0a29-f63ab06faf40",
+      "name": "Hardcoded job",
+      "message": "job \".docker_dind_cache_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_dind_cache_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "2f997d6b-157d-8177-98eb-5e6f9d6b2a5d",
+      "name": "Hardcoded job",
+      "message": "job \".docker_dind_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_dind_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "fd6c0ad1-5b5d-aac5-a76e-07780672f8ee",
+      "name": "Hardcoded job",
+      "message": "job \".docker_get_image_digest\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_get_image_digest\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "3f9e7909-6b03-d6b2-43c0-5415b08b8b68",
+      "name": "Hardcoded job",
+      "message": "job \".docker_hub_login_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_hub_login_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "977b627a-c1bd-3fbb-4517-fd04e6c0281d",
+      "name": "Hardcoded job",
+      "message": "job \".docker_login_registry\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_login_registry\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "fd2ce510-596a-2978-c8f4-5598b3237f15",
+      "name": "Hardcoded job",
+      "message": "job \".docker_promote_rules\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_promote_rules\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "778866e6-a41b-542b-024a-792221753736",
+      "name": "Hardcoded job",
+      "message": "job \".docker_push_and_sign_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_push_and_sign_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "19acd7eb-48f3-ddfc-1dc2-2545876d9a68",
+      "name": "Hardcoded job",
+      "message": "job \".docker_scan_login\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_scan_login\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "8a7283bf-3baa-134b-42a6-1e117a8d8d0f",
+      "name": "Hardcoded job",
+      "message": "job \".docker_scan_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_scan_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "01081d7c-f6ce-f258-f373-f77ee14982bf",
+      "name": "Hardcoded job",
+      "message": "job \".docker_scan_safe_name\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".docker_scan_safe_name\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "94587415-2be9-3e7e-4bfb-83d0371004a8",
+      "name": "Hardcoded job",
+      "message": "job \".doctrine_migrations_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".doctrine_migrations_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "4029d8d8-8a0b-2cd1-5baa-5266c75c7c10",
+      "name": "Hardcoded job",
+      "message": "job \".dynamic_tests_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".dynamic_tests_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "287b1d4f-be32-1818-52a4-0a083cb5cdfb",
+      "name": "Hardcoded job",
+      "message": "job \".lint_report_base\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".lint_report_base\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "e98aacac-6a69-fcc7-603e-a527f3c8b60d",
+      "name": "Hardcoded job",
+      "message": "job \".lint_report_setup\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".lint_report_setup\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "f28f9fe9-8efa-708a-3501-9f4c00746597",
+      "name": "Hardcoded job",
+      "message": "job \".php_job\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".php_job\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "8798df03-2612-4e1f-a05f-fbfa297831f5",
+      "name": "Hardcoded job",
+      "message": "job \".php_lint_job\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".php_lint_job\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "bd0fc6d9-7ea4-ef72-f53a-b04ce300ee4c",
+      "name": "Hardcoded job",
+      "message": "job \".static_tests_pattern\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \".static_tests_pattern\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "dfd34386-e8cd-adca-dcde-aafdea2c5fe6",
+      "name": "Hardcoded job",
+      "message": "job \"build\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"build\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 402
+      }
+    },
+    {
+      "id": "6ffcc659-1dfc-d228-5064-e167f96da1d0",
+      "name": "Hardcoded job",
+      "message": "job \"build_base\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"build_base\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 294
+      }
+    },
+    {
+      "id": "8da99d4a-db52-bd40-b136-2def00c131e2",
+      "name": "Hardcoded job",
+      "message": "job \"composer_unused\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"composer_unused\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 121
+      }
+    },
+    {
+      "id": "705e7226-d6d6-da44-97d2-26dd1c2c4a67",
+      "name": "Hardcoded job",
+      "message": "job \"deploy-production\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"deploy-production\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 657
+      }
+    },
+    {
+      "id": "71d40aae-2f77-3b45-0854-c104971e3b57",
+      "name": "Hardcoded job",
+      "message": "job \"deptrac\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"deptrac\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 202
+      }
+    },
+    {
+      "id": "0d7be62e-c543-de50-befa-255223522073",
+      "name": "Hardcoded job",
+      "message": "job \"dockle\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"dockle\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 485
+      }
+    },
+    {
+      "id": "a1cb7192-1f00-c2ce-2e28-2306deca97f3",
+      "name": "Hardcoded job",
+      "message": "job \"grype\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"grype\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 537
+      }
+    },
+    {
+      "id": "300366f1-dd66-72a2-a1ba-b1480c806b37",
+      "name": "Hardcoded job",
+      "message": "job \"hadolint\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"hadolint\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 93
+      }
+    },
+    {
+      "id": "8eb14f2f-0bc8-810d-a298-e671c6c48bda",
+      "name": "Hardcoded job",
+      "message": "job \"infection_php\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"infection_php\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 366
+      }
+    },
+    {
+      "id": "40bf3003-8ebc-02e4-6c72-95a58467c98b",
+      "name": "Hardcoded job",
+      "message": "job \"js_css_tests\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"js_css_tests\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 446
+      }
+    },
+    {
+      "id": "ea50739d-618a-bcec-5a49-ceafe7827916",
+      "name": "Hardcoded job",
+      "message": "job \"php-cs-fixer\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"php-cs-fixer\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 135
+      }
+    },
+    {
+      "id": "01032d9d-adf8-8e9f-6c76-262cb7374ca0",
+      "name": "Hardcoded job",
+      "message": "job \"phpstan\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"phpstan\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 176
+      }
+    },
+    {
+      "id": "53d2a0d2-1e29-7a7f-65bd-ad70ad30d7a9",
+      "name": "Hardcoded job",
+      "message": "job \"phpunit\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"phpunit\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 337
+      }
+    },
+    {
+      "id": "9c3aec16-7980-85a5-319e-3aeac15cacac",
+      "name": "Hardcoded job",
+      "message": "job \"promote\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"promote\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 592
+      }
+    },
+    {
+      "id": "390d3d9f-9b66-1da6-46f1-08e75c167e0f",
+      "name": "Hardcoded job",
+      "message": "job \"rector_apply\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"rector_apply\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 233
+      }
+    },
+    {
+      "id": "129e13ea-1ad4-af45-65d4-1c004a478d99",
+      "name": "Hardcoded job",
+      "message": "job \"rector_check\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"rector_check\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 218
+      }
+    },
+    {
+      "id": "95b3c997-6223-30a1-e06c-4c14e0e559d4",
+      "name": "Hardcoded job",
+      "message": "job \"semgrep\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"semgrep\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 169
+      }
+    },
+    {
+      "id": "34d3f852-253f-6dde-975f-c681870ca771",
+      "name": "Hardcoded job",
+      "message": "job \"slsa-attestation\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"slsa-attestation\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 610
+      }
+    },
+    {
+      "id": "49c26f9c-7ec0-f009-175e-221dc24b457e",
+      "name": "Hardcoded job",
+      "message": "job \"syft\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"syft\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 508
+      }
+    },
+    {
+      "id": "a2ea9fd1-7d5d-6a76-5689-2dfc6abb26e3",
+      "name": "Hardcoded job",
+      "message": "job \"twigcs\" is hardcoded (not sourced from include/component/template)",
+      "description": "A job in the pipeline is defined directly in the CI configuration instead of being sourced from a CI/CD component or include. Hardcoded jobs bypass governance and standardization.\n\nFinding: job \"twigcs\" is hardcoded (not sourced from include/component/template)",
+      "severity": "Medium",
+      "solution": "Replace the hardcoded job with a CI/CD component or an include from an approved catalog. Use 'include:' or 'component:' directives in your .gitlab-ci.yml.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-401: Hardcoded job",
+          "value": "ISSUE-401",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-401"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 153
+      }
+    },
+    {
+      "id": "00457130-4bdb-56e9-7362-8f689249253b",
+      "name": "Docker-in-Docker service detected",
+      "message": "job \".docker_dind_cache_pattern\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "description": "A CI/CD job uses a Docker-in-Docker (dind) service. On shared runners running in privileged mode, this enables container escape, lateral movement, and access to secrets from other jobs on the same runner.\n\nFinding: job \".docker_dind_cache_pattern\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "severity": "High",
+      "solution": "Replace Docker-in-Docker with a safer alternative such as Kaniko or Buildah for building container images. These tools do not require privileged mode and avoid the security risks of running a Docker daemon inside a CI container.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-412: Docker-in-Docker service detected",
+          "value": "ISSUE-412",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-412"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "d212e779-db9e-d56b-a844-cab4f261014e",
+      "name": "Docker-in-Docker service detected",
+      "message": "job \".docker_dind_pattern\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "description": "A CI/CD job uses a Docker-in-Docker (dind) service. On shared runners running in privileged mode, this enables container escape, lateral movement, and access to secrets from other jobs on the same runner.\n\nFinding: job \".docker_dind_pattern\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "severity": "High",
+      "solution": "Replace Docker-in-Docker with a safer alternative such as Kaniko or Buildah for building container images. These tools do not require privileged mode and avoid the security risks of running a Docker daemon inside a CI container.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-412: Docker-in-Docker service detected",
+          "value": "ISSUE-412",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-412"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "9eefdce8-4544-069f-e5f6-d0f77209e334",
+      "name": "Docker-in-Docker service detected",
+      "message": "job \"build\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "description": "A CI/CD job uses a Docker-in-Docker (dind) service. On shared runners running in privileged mode, this enables container escape, lateral movement, and access to secrets from other jobs on the same runner.\n\nFinding: job \"build\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "severity": "High",
+      "solution": "Replace Docker-in-Docker with a safer alternative such as Kaniko or Buildah for building container images. These tools do not require privileged mode and avoid the security risks of running a Docker daemon inside a CI container.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-412: Docker-in-Docker service detected",
+          "value": "ISSUE-412",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-412"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 402
+      }
+    },
+    {
+      "id": "0ec7a184-4561-295d-188c-ec0880c5a61e",
+      "name": "Docker-in-Docker service detected",
+      "message": "job \"build_base\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "description": "A CI/CD job uses a Docker-in-Docker (dind) service. On shared runners running in privileged mode, this enables container escape, lateral movement, and access to secrets from other jobs on the same runner.\n\nFinding: job \"build_base\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "severity": "High",
+      "solution": "Replace Docker-in-Docker with a safer alternative such as Kaniko or Buildah for building container images. These tools do not require privileged mode and avoid the security risks of running a Docker daemon inside a CI container.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-412: Docker-in-Docker service detected",
+          "value": "ISSUE-412",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-412"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 294
+      }
+    },
+    {
+      "id": "8cec2957-1a54-7bcd-701d-458ca462bba2",
+      "name": "Docker-in-Docker service detected",
+      "message": "job \"infection_php\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "description": "A CI/CD job uses a Docker-in-Docker (dind) service. On shared runners running in privileged mode, this enables container escape, lateral movement, and access to secrets from other jobs on the same runner.\n\nFinding: job \"infection_php\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "severity": "High",
+      "solution": "Replace Docker-in-Docker with a safer alternative such as Kaniko or Buildah for building container images. These tools do not require privileged mode and avoid the security risks of running a Docker daemon inside a CI container.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-412: Docker-in-Docker service detected",
+          "value": "ISSUE-412",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-412"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 366
+      }
+    },
+    {
+      "id": "a9077007-3db0-ec94-87f4-85e42068eec4",
+      "name": "Docker-in-Docker service detected",
+      "message": "job \"js_css_tests\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "description": "A CI/CD job uses a Docker-in-Docker (dind) service. On shared runners running in privileged mode, this enables container escape, lateral movement, and access to secrets from other jobs on the same runner.\n\nFinding: job \"js_css_tests\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "severity": "High",
+      "solution": "Replace Docker-in-Docker with a safer alternative such as Kaniko or Buildah for building container images. These tools do not require privileged mode and avoid the security risks of running a Docker daemon inside a CI container.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-412: Docker-in-Docker service detected",
+          "value": "ISSUE-412",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-412"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 446
+      }
+    },
+    {
+      "id": "9f27d966-2111-35be-b6b1-91266e5ea94f",
+      "name": "Docker-in-Docker service detected",
+      "message": "job \"phpunit\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "description": "A CI/CD job uses a Docker-in-Docker (dind) service. On shared runners running in privileged mode, this enables container escape, lateral movement, and access to secrets from other jobs on the same runner.\n\nFinding: job \"phpunit\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "severity": "High",
+      "solution": "Replace Docker-in-Docker with a safer alternative such as Kaniko or Buildah for building container images. These tools do not require privileged mode and avoid the security risks of running a Docker daemon inside a CI container.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-412: Docker-in-Docker service detected",
+          "value": "ISSUE-412",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-412"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 337
+      }
+    },
+    {
+      "id": "713f2426-6adc-3b01-984f-30ae97f9ae5a",
+      "name": "Docker-in-Docker service detected",
+      "message": "job \"promote\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "description": "A CI/CD job uses a Docker-in-Docker (dind) service. On shared runners running in privileged mode, this enables container escape, lateral movement, and access to secrets from other jobs on the same runner.\n\nFinding: job \"promote\" uses Docker-in-Docker service \"docker:29.5.2-dind\"",
+      "severity": "High",
+      "solution": "Replace Docker-in-Docker with a safer alternative such as Kaniko or Buildah for building container images. These tools do not require privileged mode and avoid the security risks of running a Docker daemon inside a CI container.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-412: Docker-in-Docker service detected",
+          "value": "ISSUE-412",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-412"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 592
+      }
+    },
+    {
+      "id": "c470f3b8-9c63-77e3-2405-26c105454cd9",
+      "name": "Docker-in-Docker with insecure daemon configuration",
+      "message": "Job '.docker_dind_cache_pattern': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "description": "A CI/CD job uses Docker-in-Docker with an insecure daemon configuration. Setting DOCKER_TLS_CERTDIR to an empty string or using DOCKER_HOST with tcp://...:2375 disables TLS encryption between the CI job and the Docker daemon, allowing network-level eavesdropping and command injection.\n\nFinding: Job '.docker_dind_cache_pattern': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "severity": "High",
+      "solution": "If Docker-in-Docker is required, ensure TLS is enabled: do not set DOCKER_TLS_CERTDIR to an empty string, and use tcp://docker:2376 (TLS) instead of tcp://docker:2375 (plaintext). Prefer Kaniko or Buildah to avoid this pattern entirely.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-413: Docker-in-Docker with insecure daemon configuration",
+          "value": "ISSUE-413",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-413"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "6d271fce-c4b8-2a43-4463-e45fae0b7b7e",
+      "name": "Docker-in-Docker with insecure daemon configuration",
+      "message": "Job '.docker_dind_pattern': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "description": "A CI/CD job uses Docker-in-Docker with an insecure daemon configuration. Setting DOCKER_TLS_CERTDIR to an empty string or using DOCKER_HOST with tcp://...:2375 disables TLS encryption between the CI job and the Docker daemon, allowing network-level eavesdropping and command injection.\n\nFinding: Job '.docker_dind_pattern': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "severity": "High",
+      "solution": "If Docker-in-Docker is required, ensure TLS is enabled: do not set DOCKER_TLS_CERTDIR to an empty string, and use tcp://docker:2376 (TLS) instead of tcp://docker:2375 (plaintext). Prefer Kaniko or Buildah to avoid this pattern entirely.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-413: Docker-in-Docker with insecure daemon configuration",
+          "value": "ISSUE-413",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-413"
+        }
+      ],
+      "location": {}
+    },
+    {
+      "id": "c1e0001e-230a-e78b-19f5-70c06c3a9795",
+      "name": "Docker-in-Docker with insecure daemon configuration",
+      "message": "Job 'build': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "description": "A CI/CD job uses Docker-in-Docker with an insecure daemon configuration. Setting DOCKER_TLS_CERTDIR to an empty string or using DOCKER_HOST with tcp://...:2375 disables TLS encryption between the CI job and the Docker daemon, allowing network-level eavesdropping and command injection.\n\nFinding: Job 'build': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "severity": "High",
+      "solution": "If Docker-in-Docker is required, ensure TLS is enabled: do not set DOCKER_TLS_CERTDIR to an empty string, and use tcp://docker:2376 (TLS) instead of tcp://docker:2375 (plaintext). Prefer Kaniko or Buildah to avoid this pattern entirely.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-413: Docker-in-Docker with insecure daemon configuration",
+          "value": "ISSUE-413",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-413"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 402
+      }
+    },
+    {
+      "id": "77950863-9632-6da3-be75-e0818ceec81a",
+      "name": "Docker-in-Docker with insecure daemon configuration",
+      "message": "Job 'build_base': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "description": "A CI/CD job uses Docker-in-Docker with an insecure daemon configuration. Setting DOCKER_TLS_CERTDIR to an empty string or using DOCKER_HOST with tcp://...:2375 disables TLS encryption between the CI job and the Docker daemon, allowing network-level eavesdropping and command injection.\n\nFinding: Job 'build_base': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "severity": "High",
+      "solution": "If Docker-in-Docker is required, ensure TLS is enabled: do not set DOCKER_TLS_CERTDIR to an empty string, and use tcp://docker:2376 (TLS) instead of tcp://docker:2375 (plaintext). Prefer Kaniko or Buildah to avoid this pattern entirely.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-413: Docker-in-Docker with insecure daemon configuration",
+          "value": "ISSUE-413",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-413"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 294
+      }
+    },
+    {
+      "id": "f2b646f8-9f8c-1543-03d3-83d5d3aa3e11",
+      "name": "Docker-in-Docker with insecure daemon configuration",
+      "message": "Job 'infection_php': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "description": "A CI/CD job uses Docker-in-Docker with an insecure daemon configuration. Setting DOCKER_TLS_CERTDIR to an empty string or using DOCKER_HOST with tcp://...:2375 disables TLS encryption between the CI job and the Docker daemon, allowing network-level eavesdropping and command injection.\n\nFinding: Job 'infection_php': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "severity": "High",
+      "solution": "If Docker-in-Docker is required, ensure TLS is enabled: do not set DOCKER_TLS_CERTDIR to an empty string, and use tcp://docker:2376 (TLS) instead of tcp://docker:2375 (plaintext). Prefer Kaniko or Buildah to avoid this pattern entirely.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-413: Docker-in-Docker with insecure daemon configuration",
+          "value": "ISSUE-413",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-413"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 366
+      }
+    },
+    {
+      "id": "ec90a302-e30e-87be-bedb-e515e13320d5",
+      "name": "Docker-in-Docker with insecure daemon configuration",
+      "message": "Job 'js_css_tests': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "description": "A CI/CD job uses Docker-in-Docker with an insecure daemon configuration. Setting DOCKER_TLS_CERTDIR to an empty string or using DOCKER_HOST with tcp://...:2375 disables TLS encryption between the CI job and the Docker daemon, allowing network-level eavesdropping and command injection.\n\nFinding: Job 'js_css_tests': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "severity": "High",
+      "solution": "If Docker-in-Docker is required, ensure TLS is enabled: do not set DOCKER_TLS_CERTDIR to an empty string, and use tcp://docker:2376 (TLS) instead of tcp://docker:2375 (plaintext). Prefer Kaniko or Buildah to avoid this pattern entirely.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-413: Docker-in-Docker with insecure daemon configuration",
+          "value": "ISSUE-413",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-413"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 446
+      }
+    },
+    {
+      "id": "2e5fdd2a-90ad-6e4d-b6a8-00f592435412",
+      "name": "Docker-in-Docker with insecure daemon configuration",
+      "message": "Job 'phpunit': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "description": "A CI/CD job uses Docker-in-Docker with an insecure daemon configuration. Setting DOCKER_TLS_CERTDIR to an empty string or using DOCKER_HOST with tcp://...:2375 disables TLS encryption between the CI job and the Docker daemon, allowing network-level eavesdropping and command injection.\n\nFinding: Job 'phpunit': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "severity": "High",
+      "solution": "If Docker-in-Docker is required, ensure TLS is enabled: do not set DOCKER_TLS_CERTDIR to an empty string, and use tcp://docker:2376 (TLS) instead of tcp://docker:2375 (plaintext). Prefer Kaniko or Buildah to avoid this pattern entirely.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-413: Docker-in-Docker with insecure daemon configuration",
+          "value": "ISSUE-413",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-413"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 337
+      }
+    },
+    {
+      "id": "9e6cfa9f-fb9e-2300-a3cf-cf1453b25b8e",
+      "name": "Docker-in-Docker with insecure daemon configuration",
+      "message": "Job 'promote': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "description": "A CI/CD job uses Docker-in-Docker with an insecure daemon configuration. Setting DOCKER_TLS_CERTDIR to an empty string or using DOCKER_HOST with tcp://...:2375 disables TLS encryption between the CI job and the Docker daemon, allowing network-level eavesdropping and command injection.\n\nFinding: Job 'promote': DOCKER_TLS_CERTDIR is empty (TLS disabled)",
+      "severity": "High",
+      "solution": "If Docker-in-Docker is required, ensure TLS is enabled: do not set DOCKER_TLS_CERTDIR to an empty string, and use tcp://docker:2376 (TLS) instead of tcp://docker:2375 (plaintext). Prefer Kaniko or Buildah to avoid this pattern entirely.",
+      "scanner": {
+        "id": "plumber",
+        "name": "Plumber"
+      },
+      "identifiers": [
+        {
+          "type": "plumber",
+          "name": "Plumber ISSUE-413: Docker-in-Docker with insecure daemon configuration",
+          "value": "ISSUE-413",
+          "url": "https://getplumber.io/docs/cli/issues/ISSUE-413"
+        }
+      ],
+      "location": {
+        "file": ".gitlab-ci.yml",
+        "start_line": 592
+      }
+    }
+  ]
+}

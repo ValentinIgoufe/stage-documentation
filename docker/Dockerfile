@@ -47,6 +47,10 @@ RUN composer install --optimize-autoloader --no-scripts -vvv
 COPY . .
 
 # Img Hardened
+# Il manque des libraies systèmes pour les extensions PHP
+# Cette image est gratuite et ne possède pas de sh/apt
+# Donc impossible de l'utiliser il faut FROM runtime_base
+# Et remettre le user etc...
 FROM dhi.io/php:${PHP_VERSION} AS symfony_runtime
 ARG CACHE_BUSTER=0
 # On l'affiche ou on l'utilise pour casser le cache à ce niveau précis

@@ -8,7 +8,7 @@
 
 > * [Pipeline GitLab CI](pipeline/WORKFLOW.md)
 
-> * [Dockerfile](docker/_DODCKERFILE.md)
+> * [Dockerfile](docker/_DOCKERFILE.md)
 
 > * [Docker compose](docker/DOCKERCOMPOSE.md)
 
@@ -32,7 +32,7 @@ Avantage : Trouve des failles que le code seul ne montre pas (ex: mauvaise confi
 > **SBOM (Software Bill of Materials)**
 ***C'est quoi ?*** La liste des ingrédients de ton logiciel.
 Pourquoi ? Ton projet Symfony utilise des centaines de paquets (via Composer). Le SBOM inventorie tout (versions, licences).
-Utilité : Si une faille est découverte dans une petite bibliothèque obscure, le SBOM te permet de savoir instantanément si la mairie est en danger.
+Utilité : si une faille est découverte dans une petite bibliothèque obscure, le SBOM permet de savoir rapidement si ton projet est concerné.
 
 > **CVE (Common Vulnerabilities and Exposures)**
 ***C'est quoi ?*** Le dictionnaire public des failles de sécurité connues. Chaque faille a son numéro (ex: CVE-2024-1234).
