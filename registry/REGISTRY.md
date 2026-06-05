@@ -24,7 +24,14 @@ registry_nginx['listen_port'] = 5005
 registry_nginx['listen_https'] = false
 
 >:bangbang: 
-> J'ai tout fait en **HTTP** pour l'utilisation du Registry.
+> J'ai tout fait en **HTTP** pour l'utilisation du Registry. Si HTTPS, il faut enlever les (gitlab-ci) :
+>- **command: ["--insecure-registry=gitlab:5005"]**,
+>- **DOCKER_OPTS: "--insecure-registry=gitlab:5005"**, 
+>- **insecure = true' > /tmp/buildkitd.toml**,
+>- **--insecure**,
+>- **SYFT_REGISTRY_INSECURE_SKIP_TLS_VERIFY: "true" && SYFT_REGISTRY_INSECURE_USE_HTTP: "true"**,
+>- **--allow-http-registry**,
+>- et potentiellement **DOCKER_TLS_CERTDIR: ""**
 >:bangbang:
 
 > Il faut remplacer 'gitlab' par l'url du vrai GitLab, puis redémarrer GitLab et si on retourne sur l'Admin area le Container Registry sera normalement activé.

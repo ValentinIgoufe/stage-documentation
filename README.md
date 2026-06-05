@@ -4,6 +4,8 @@
 
 #### Sommaire : 
 
+> * [Registry](registry/REGISTRY.md)
+
 > * [Renovate](renovate/RENOVATE.md)
 
 > * [Pipeline GitLab CI](pipeline/WORKFLOW.md)
